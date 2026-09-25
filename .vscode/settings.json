@@ -1,0 +1,7 @@
+{
+    "github.copilot.chat.copilotDebugCommand.enabled": false,
+    "github.copilot.chat.tools.viewImage.enabled": false,
+    "github.copilot.chat.gemini35FlashReducedToolUsePrompt.enabled": false,
+    "github.copilot.chat.reviewAgent.enabled": true,
+    "github.copilot.chat.reviewSelection.enabled": true
+}
