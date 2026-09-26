@@ -8,7 +8,6 @@ import * as sampleResponseAcocks from '../data/cex-api-sample-query-acocks-gc-ds
 import * as sampleResponseAberdeen from '../data/cex-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
 import { CexProductLine, CexProductLineResponseModel } from '../../src/model/cexApiModel.js';
 import { ServiceUnavailableException } from '@nestjs/common';
-import { NotFoundError } from 'rxjs';
 
 vi.mock('axios');
 
@@ -71,10 +70,9 @@ describe('CexApiService', () => {
         it('when the cex api is down, throw a ServiceUnavailableError', async () => {
             vi.mocked(axios.get).mockRejectedValue({});
 
-            expect(service.getProductLines()).rejects.toThrow(ServiceUnavailableException)
+            await expect(service.getProductLines()).rejects.toThrow(ServiceUnavailableException)
         })
     })
-
 
     describe('getListOfGamesForUser()', async () => {
         it('When the user has selected a single store and multiple catagories, should build a response containing everything that matches', async () => {
@@ -258,7 +256,7 @@ describe('CexApiService', () => {
 
             vi.mocked(axios.post).mockRejectedValue({});
 
-            expect(service.getListOfGamesForUser()).rejects.toThrow(ServiceUnavailableException)
+            await expect(service.getListOfGamesForUser()).rejects.toThrow(ServiceUnavailableException)
 
         })
     })
