@@ -47,11 +47,15 @@ describe('CexController', () => {
 
     const result = await controller.getProductLines([1]);
 
-    expect(result).toEqual([
-      {
-        productLineId: 1,
+    expect(result).toEqual(
+      { 
+        productLines: [
+          {
+            productLineId: 1,
+          },
+        ]
       },
-    ]);
+    );
 
     expect(mockService.getProductLines).toHaveBeenCalledWith(1);
   });

@@ -8,6 +8,6 @@ export class DatabaseService {
     }
 
     public getStoresForUser(): string[] {
-        return ['Aberdeen', 'Accrington', 'Acocks Green'] 
+        return ['Solihull'] 
     }
 }

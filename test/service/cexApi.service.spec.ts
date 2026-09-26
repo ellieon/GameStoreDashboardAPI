@@ -6,6 +6,7 @@ import { CexApiService } from '../../src/service/cexApi.service.js';
 import { DatabaseService } from '../../src/service/database.service.js';
 import * as sampleResponseAcocks from '../data/cex-api-sample-query-acocks-gc-ds.json' with { type: 'json' };
 import * as sampleResponseAberdeen from '../data/cex-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
+import { CexProductLine, CexProductLineResponse, CexProductLineResponseModel, CexQueryResponseModel } from '../../src/model/cexApiModel.js';
 
 vi.mock('axios');
 
@@ -49,8 +50,8 @@ describe('CexApiService', () => {
                         ],
                     },
                 },
-            },
-        } as any);
+            } as CexProductLineResponseModel
+        });
 
         const result = await service.getProductLines(1);
 
@@ -73,16 +74,16 @@ describe('CexApiService', () => {
                 {
                     productLineId: 59,
                     productLineName: 'Nintendo DS',
-                } as any,
+                } as CexProductLine,
                 {
                     productLineId: 67,
                     productLineName: 'Nintendo Gamecube',
-                } as any,
+                } as CexProductLine,
             ]);
 
             vi.mocked(axios.post).mockResolvedValue({
                 data: sampleResponseAcocks,
-            } as any);
+            });
 
             const result = await service.getListOfGamesForUser();
 

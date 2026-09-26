@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { cexApiQueryModel, CexProductLine } from '../model/cexApiModel.js';
+import { cexApiQueryModel, CexGameHit, CexProductLine, CexProductLineResponseModel, CexQueryResponseModel } from '../model/cexApiModel.js';
 import axios from 'axios';
 import { DatabaseService } from './database.service.js';
 import { getRequiredEnvVar } from '../common/getRequiredEnvVar.js';
@@ -8,7 +8,7 @@ import { GameStore, GameStoreGame, GameStoreResponse } from '../model/gameStore.
 @Injectable()
 export class CexApiService {
 
-  private readonly DEFAULT_PRODUCT_LINES: number[] = [
+  private static readonly DEFAULT_PRODUCT_LINES: number[] = [
     1, //Gaming
     4, //Phones
     3, //Computing
@@ -37,7 +37,7 @@ export class CexApiService {
     let storeData = []
 
     for(let i = 0; i < stores.length; i++){
-      const response = await axios.post(url, this.buildQueryParameters(stores[i], categories));
+      const response = await axios.post<CexQueryResponseModel>(url, this.buildQueryParameters(stores[i], categories));
       
       storeData.push(this.buildStoreObjFromGames(response.data.hits, stores[i], categories, productLines));
     }
@@ -46,12 +46,12 @@ export class CexApiService {
   }
 
   public async getProductLines(...superCatIds: number[]): Promise<CexProductLine[]>{
-    if (superCatIds.length == 0)
+    if (superCatIds.length === 0)
       superCatIds = [1, 55] 
 
     const url = getRequiredEnvVar('CEX_CATEGORY_URL')
 
-    const response = await axios.get(`${url}/productlines`, {
+    const response = await axios.get<CexProductLineResponseModel>(`${url}/productlines`, {
       params:{
         superCatIds: JSON.stringify(superCatIds)
       }
@@ -60,7 +60,7 @@ export class CexApiService {
     return response.data.response.data.productLines
   }
 
-  private buildStoreObjFromGames(inputData: any[], store: string, categories: string[], productLines: CexProductLine[]): GameStore{
+  private buildStoreObjFromGames(inputData: CexGameHit[], store: string, categories: string[], productLines: CexProductLine[]): GameStore{
     let ids: string[] = []
 
     const storeObj: GameStore = {
@@ -86,7 +86,7 @@ export class CexApiService {
       if(game.outOfStock.indexOf(store) == -1){
           storeObj.availableBoxIds.push(game.boxId)
           storeObj.categories.forEach((category: {
-              games: any; id: any; }) => {
+              games: GameStoreGame[]; id: number; }) => {
                 if(game.productLineId.indexOf(Number(category.id)) > -1){
                   const gameStoreGame: GameStoreGame = {
                     boxName: game.boxName, 

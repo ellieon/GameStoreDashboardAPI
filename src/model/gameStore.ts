@@ -18,3 +18,15 @@ export type GameStore = {
 export type GameStoreResponse = {
     stores: GameStore[]
 }  
+
+export type GameStoreProductLineResponse = {
+    productLines: GameStoreProductLine[]
+}
+
+export type GameStoreProductLine = {
+    superCatId: number,
+    productLineId: number,
+    productLineName: string,
+    totalCategories: number,
+    imageName: string
+}
