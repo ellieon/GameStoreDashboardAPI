@@ -1,5 +1,5 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { cexApiQueryModel, CexGameHit, CexProductLine, CexProductLineResponseModel, CexQueryResponseModel } from '../model/cexApiModel.js';
+import { CexApiQueryModel, CexGameHit, CexProductLine, CexProductLineResponseModel, CexQueryResponseModel } from '../model/cexApiModel.js';
 import axios from 'axios';
 import { DatabaseService } from './database.service.js';
 import { getRequiredEnvVar } from '../common/getRequiredEnvVar.js';
@@ -31,22 +31,23 @@ export class CexApiService {
     );
 
     const url = getRequiredEnvVar('CEX_QUERY_URL')
-
     const productLines = await this.getProductLines()
-
     let storeData = []
 
-    const results = await Promise.all(
-      stores.map(store => 
-        axios.post<CexQueryResponseModel>(url, this.buildQueryParameters(store, categories))
+    try {
+      const results = await Promise.all(
+        stores.map(store =>
+          axios.post<CexQueryResponseModel>(url, this.buildQueryParameters(store, categories))
+        )
       )
-    ).catch(() => { throw new ServiceUnavailableException('Unable to connect to CeX endpoint')})
+      storeData = results.map(result =>
+        this.buildStoreObjFromGames(result.data.hits, stores[results.indexOf(result)], categories, productLines)
+      )
 
-    storeData = results.map( result => 
-      this.buildStoreObjFromGames(result.data.hits, stores[results.indexOf(result)], categories, productLines)
-    )
-
-    return { stores: storeData }
+      return { stores: storeData }
+    } catch (error) {
+      throw new ServiceUnavailableException(error, 'Unable to connect to CeX endpoint')
+    }
   }
 
   public async getProductLines(...superCatIds: number[]): Promise<CexProductLine[]> {
@@ -61,7 +62,6 @@ export class CexApiService {
           superCatIds: JSON.stringify(superCatIds)
         }
       })
-
       return response.data.response.data.productLines
     } catch (error) {
       throw new ServiceUnavailableException(error, 'Unable to connect to CeX endpoint')
@@ -112,7 +112,7 @@ export class CexApiService {
     return storeObj;
   }
 
-  private buildQueryParameters(store: string, categories: string[]): cexApiQueryModel {
+  private buildQueryParameters(store: string, categories: string[]): CexApiQueryModel {
     return {
       attributesToRetrieve: ['boxName', 'sellPrice', 'productLineId', 'outOfStock', 'boxId'],
       facetFilters: [`stores: ${store}`],

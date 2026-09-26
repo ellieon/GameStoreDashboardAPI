@@ -1,6 +1,6 @@
-export type cexApiQueryModel = {
+export type CexApiQueryModel = {
     attributesToRetrieve: string[],
-    facetFilters: any,
+    facetFilters: string[],
     filters: string, 
     hitsPerPage: number,
     maxValuesPerFacet: number,

@@ -7,6 +7,8 @@ import { DatabaseService } from '../../src/service/database.service.js';
 import * as sampleResponseAcocks from '../data/cex-api-sample-query-acocks-gc-ds.json' with { type: 'json' };
 import * as sampleResponseAberdeen from '../data/cex-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
 import { CexProductLine, CexProductLineResponseModel } from '../../src/model/cexApiModel.js';
+import { ServiceUnavailableException } from '@nestjs/common';
+import { NotFoundError } from 'rxjs';
 
 vi.mock('axios');
 
@@ -37,33 +39,42 @@ describe('CexApiService', () => {
         process.env.CEX_CATEGORY_URL = 'test-category';
     });
 
-    it('should return product lines', async () => {
-        vi.mocked(axios.get).mockResolvedValue({
-            data: {
-                response: {
-                    data: {
-                        productLines: [
-                            {
-                                productLineId: 1,
-                                productLineName: 'PlayStation 5',
-                            },
-                        ],
+    describe('getProductLines', async () => {
+        it('should return product lines', async () => {
+            vi.mocked(axios.get).mockResolvedValue({
+                data: {
+                    response: {
+                        data: {
+                            productLines: [
+                                {
+                                    productLineId: 1,
+                                    productLineName: 'PlayStation 5',
+                                },
+                            ],
+                        },
                     },
+                } as CexProductLineResponseModel
+            });
+
+            const result = await service.getProductLines(1);
+
+            expect(result).toEqual([
+                {
+                    productLineId: 1,
+                    productLineName: 'PlayStation 5',
                 },
-            } as CexProductLineResponseModel
+            ]);
+
+            expect(axios.get).toHaveBeenCalledOnce()
         });
 
-        const result = await service.getProductLines(1);
+        it('when the cex api is down, throw a ServiceUnavailableError', async () => {
+            vi.mocked(axios.get).mockRejectedValue({});
 
-        expect(result).toEqual([
-            {
-                productLineId: 1,
-                productLineName: 'PlayStation 5',
-            },
-        ]);
+            expect(service.getProductLines()).rejects.toThrow(ServiceUnavailableException)
+        })
+    })
 
-        expect(axios.get).toHaveBeenCalledOnce();
-    });
 
     describe('getListOfGamesForUser()', async () => {
         it('When the user has selected a single store and multiple catagories, should build a response containing everything that matches', async () => {
@@ -131,7 +142,7 @@ describe('CexApiService', () => {
             });
         });
 
-         it('When the user has selected multiple stores and multiple catagories, should build a combined response containing everything that matches', async () => {
+        it('When the user has selected multiple stores and multiple catagories, should build a combined response containing everything that matches', async () => {
             mockDatabaseService.getStoresForUser.mockReturnValue(['Acocks Green', 'Aberdeen']);
             mockDatabaseService.getCategoriesForUser.mockReturnValue(['67', '59']);
 
@@ -146,17 +157,21 @@ describe('CexApiService', () => {
                 } as any,
             ]);
 
-            vi.mocked(axios.post).mockImplementationOnce(() => {return {
-                data: sampleResponseAberdeen
-            } as any }).mockImplementationOnce(() => {return {
-                data: sampleResponseAcocks,
-            } as any });
+            vi.mocked(axios.post).mockImplementationOnce(() => {
+                return {
+                    data: sampleResponseAberdeen
+                } as any
+            }).mockImplementationOnce(() => {
+                return {
+                    data: sampleResponseAcocks,
+                } as any
+            });
 
             const result = await service.getListOfGamesForUser();
 
             expect(result).toMatchObject({
                 stores: [
-                     {
+                    {
                         name: 'Aberdeen',
                         availableBoxIds: ['SLEGGCS194B', '5060004765928'],
                         categories: [
@@ -225,6 +240,27 @@ describe('CexApiService', () => {
                 ],
             });
         });
+
+        it('When the cex api is down a ServiceUnavailableError should be thrown', async () => {
+            mockDatabaseService.getStoresForUser.mockReturnValue(['Acocks Green']);
+            mockDatabaseService.getCategoriesForUser.mockReturnValue(['67', '59']);
+
+            vi.spyOn(service, 'getProductLines').mockResolvedValue([
+                {
+                    productLineId: 59,
+                    productLineName: 'Nintendo DS',
+                } as CexProductLine,
+                {
+                    productLineId: 67,
+                    productLineName: 'Nintendo Gamecube',
+                } as CexProductLine,
+            ]);
+
+            vi.mocked(axios.post).mockRejectedValue({});
+
+            expect(service.getListOfGamesForUser()).rejects.toThrow(ServiceUnavailableException)
+
+        })
     })
 
 });
