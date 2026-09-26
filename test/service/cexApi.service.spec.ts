@@ -6,7 +6,7 @@ import { CexApiService } from '../../src/service/cexApi.service.js';
 import { DatabaseService } from '../../src/service/database.service.js';
 import * as sampleResponseAcocks from '../data/cex-api-sample-query-acocks-gc-ds.json' with { type: 'json' };
 import * as sampleResponseAberdeen from '../data/cex-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
-import { CexProductLine, CexProductLineResponse, CexProductLineResponseModel, CexQueryResponseModel } from '../../src/model/cexApiModel.js';
+import { CexProductLine, CexProductLineResponseModel } from '../../src/model/cexApiModel.js';
 
 vi.mock('axios');
 

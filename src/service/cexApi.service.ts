@@ -45,7 +45,7 @@ export class CexApiService {
     storeData = results.map( result => 
       this.buildStoreObjFromGames(result.data.hits, stores[results.indexOf(result)], categories, productLines)
     )
-    
+
     return { stores: storeData }
   }
 
@@ -64,7 +64,7 @@ export class CexApiService {
 
       return response.data.response.data.productLines
     } catch (error) {
-      throw new ServiceUnavailableException('Unable to connect to CeX endpoint')
+      throw new ServiceUnavailableException(error, 'Unable to connect to CeX endpoint')
     }
 
   }

@@ -1,4 +1,4 @@
-import { Controller, Get, Header, Query } from '@nestjs/common';
+import { Controller, Get, Header, ParseArrayPipe, Query } from '@nestjs/common';
 import { CexApiService } from '../service/cexApi.service.js';
 import { GameStoreProductLineResponse, GameStoreResponse } from '../model/gameStore.js';
 
@@ -15,8 +15,8 @@ export class CexController {
 
   @Get('/product-lines')
   @Header('Content-Type', 'application/json')
-  async getProductLines(@Query('superCatIds')superCatIds: number[] = []): Promise<GameStoreProductLineResponse> {
-    const productLines = await this.appService.getProductLines(...superCatIds);
+  async getProductLines(@Query('superCatIds',new ParseArrayPipe({items: Number, separator: ','})) superCatIds: number[]): Promise<GameStoreProductLineResponse> {
+    const productLines = await this.appService.getProductLines(...superCatIds) ;
     return { productLines: productLines };
   }
 }
