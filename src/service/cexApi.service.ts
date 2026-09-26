@@ -1,62 +1,112 @@
 import { Injectable } from '@nestjs/common';
-import { cexApiQueryModel } from '../model/cexApiModel.js';
+import { cexApiQueryModel, CexProductLine } from '../model/cexApiModel.js';
 import axios from 'axios';
+import { DatabaseService } from './database.service.js';
+import { getRequiredEnvVar } from '../common/getRequiredEnvVar.js';
+import { GameStore, GameStoreGame, GameStoreResponse } from '../model/gameStore.js';
 
 @Injectable()
 export class CexApiService {
-  public async queryGameApi(): Promise<string[]> {
-    const stores = this.getStoresForUser()
-    const categories = this.getCategoriesForUser()  
-    const response = await axios.post('https://search.webuy.io/1/indexes/prod_cex_uk/query', this.buildQuery(stores, categories));
 
-    return this.formatData(this.getGamesFromResponse(response.data), stores, categories);
-  }
+  private readonly DEFAULT_PRODUCT_LINES: number[] = [
+    1, //Gaming
+    4, //Phones
+    3, //Computing
+    5, //Electronics
+    2, // Film
+    9, // New Accessories
+    10 // Apparel
+  ] 
+  constructor(
+    private databaseService: DatabaseService
+  ) {}
 
-  private formatData(inputData: any[], stores: string[], categories: string[]): any{
-    const data: any[] = []
-    const storeMap: Map<String, any> = new Map()
-    stores.forEach(store => {
-        const storeObj = {
-            storeName: store,
-            categories : categories.map(category => {
-                return {
-                    id: category,
-                    games: []
-                }
-                
-            })
-        }
-        storeMap.set(store, storeObj)
-    })
+  public async getListOfGamesForUser(): Promise<GameStoreResponse> {
+    const stores = this.databaseService.getStoresForUser().sort((a, b) =>
+      a.localeCompare(b)
+    ); 
 
-    inputData.forEach(game => {
-        stores.forEach(store => {
-            if(game.outOfStock.indexOf(store) == -1){
-                const storeObj = storeMap.get(store)
-                storeObj.categories.forEach((category: {
-                    games: any; id: any; }) => {
-                        console.log(category.id)
-                        console.log(game.productLineId)
-                    if(game.productLineId.indexOf(Number(category.id)) > -1){
-                        console.log('match')
-                        category.games.push({boxName: game.boxName, sellPrice: game.sellPrice});
-                    }
-                });
-            }
-        });
-    })
+    const categories = this.databaseService.getCategoriesForUser().sort((a, b) =>
+      a.localeCompare(b)
+    );
     
-    storeMap.forEach(element => {
-        data.push(element);
-    });
-    return data;
+    const url = getRequiredEnvVar('CEX_QUERY_URL')
+
+    const productLines = await this.getProductLines()
+
+    let storeData = []
+
+    for(let i = 0; i < stores.length; i++){
+      const response = await axios.post(url, this.buildQueryParameters(stores[i], categories));
+      
+      storeData.push(this.buildStoreObjFromGames(response.data.hits, stores[i], categories, productLines));
+    }
+
+    return { stores: storeData }
   }
 
-  private buildQuery(stores: string[], categories: string[]): cexApiQueryModel
+  public async getProductLines(...superCatIds: number[]): Promise<CexProductLine[]>{
+    if (superCatIds.length == 0)
+      superCatIds = [1, 55] 
+
+    const url = getRequiredEnvVar('CEX_CATEGORY_URL')
+
+    const response = await axios.get(`${url}/productlines`, {
+      params:{
+        superCatIds: JSON.stringify(superCatIds)
+      }
+    })
+
+    return response.data.response.data.productLines
+  }
+
+  private buildStoreObjFromGames(inputData: any[], store: string, categories: string[], productLines: CexProductLine[]): GameStore{
+    let ids: string[] = []
+
+    const storeObj: GameStore = {
+        name: store,
+        availableBoxIds: ids,
+        categories : categories.map(category => {
+            const productLine = productLines.find(productLine =>{
+              return String(productLine.productLineId) === category
+            } )
+            return {
+                id: Number(category),
+                name: productLine?.productLineName,
+                games: []
+            }
+        })
+    }
+
+    const sortedData = inputData.sort((a, b) =>
+      a.boxName.localeCompare(b.boxName)
+    );
+
+    sortedData.forEach(game => {
+      if(game.outOfStock.indexOf(store) == -1){
+          storeObj.availableBoxIds.push(game.boxId)
+          storeObj.categories.forEach((category: {
+              games: any; id: any; }) => {
+                if(game.productLineId.indexOf(Number(category.id)) > -1){
+                  const gameStoreGame: GameStoreGame = {
+                    boxName: game.boxName, 
+                    sellPrice: game.sellPrice,
+                    id: game.boxId
+                  }
+                  category.games.push(gameStoreGame);
+                }
+          });
+       }
+    });
+  
+    return storeObj;
+  } 
+
+  private buildQueryParameters(store: string, categories: string[]): cexApiQueryModel
   {
     return {
-        attributesToRetrieve: ['boxName', 'sellPrice', 'productLineId', 'outOfStock'],
-        facetFilters: [ this.getStoresFilterString(stores) ],
+        attributesToRetrieve: ['boxName', 'sellPrice', 'productLineId', 'outOfStock', 'boxId'],
+        facetFilters: [ `stores: ${store}` ],
         filters: `boxVisibilityOnWeb=1 AND boxSaleAllowed=1 AND (${this.getCategoryFilterString(categories)}) AND sellPrice > 0 AND (inStockStore=1 OR inStockOnline=1) AND (collectionQuantity>0 OR ecomQuantity>0)`,
         hitsPerPage: 1000,
         maxValuesPerFacet: 1000,
@@ -64,30 +114,14 @@ export class CexApiService {
     }
   }
 
-  private getStoresForUser(): string[]{
-    return ['Solihull', 'Birmingham', 'Acocks Green'] 
-  }
-
-  private getStoresFilterString(stores: string[]): string[]{
-    const storeStrings = stores.map((store: string) => {
-        return `stores:${store}`
-    })
-
-    return storeStrings
-  }
-
-  private getCategoriesForUser(): string[] {
-    return ['67', '70']
-  }
   private getCategoryFilterString(categories: string[]): string{
-    return 'productLineId=67 OR productLineId=70'
-  }
-
-  private getGamesFromResponse(data: any): string[] { 
-    const hits = data.hits.map((hit: any) => {
-      const { boxName, sellPrice, productLineId, outOfStock } = hit;
-      return { boxName, sellPrice, productLineId, outOfStock };
-    });
-    return hits;
+    let filterString = ''
+    for (let i = 0; i < categories.length; i++) {
+      filterString += `productLineId=${categories[i]}`
+      if (i != categories.length -1) {
+        filterString += ' OR '
+      }
+    }
+    return filterString
   }
 }

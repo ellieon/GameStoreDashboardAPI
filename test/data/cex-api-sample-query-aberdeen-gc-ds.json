@@ -1,0 +1,119 @@
+{
+    "hits": [
+        
+        {
+            "boxId": "5060004765928",
+            "boxName": "Sonic Rush",
+            "outOfStock": [],  
+            "imageUrls": {
+                "large": "https://uk.static.webuy.com/product_images/Gaming/DS Software/5060004765928_l.jpg",
+                "small": "https://uk.static.webuy.com/product_images/Gaming/DS Software/5060004765928_s.jpg",
+                "medium": "https://uk.static.webuy.com/product_images/Gaming/DS Software/5060004765928_m.jpg",
+                "masterBoxLarge": null,
+                "masterBoxSmall": null,
+                "masterBoxMedium": null
+            },
+            "sellPrice": 12,
+            "imageNames": null,
+            "productLineId": [
+                59,
+                79
+            ],
+            "objectID": "5060004765928",
+            "_highlightResult": {
+                "boxName": {
+                    "value": "Sonic Rush",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                },
+                "categoryFriendlyName": {
+                    "value": "Nintendo DS Games",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                }
+            }
+        },
+        {
+            "boxId": "SLEGGCS194B",
+            "boxName": "Lost Kingdoms II, + Manual, Boxed",
+            "outOfStock": [],
+            "imageUrls": {
+                "large": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS194B_l.jpg",
+                "small": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS194B_s.jpg",
+                "medium": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS194B_m.jpg",
+                "masterBoxLarge": null,
+                "masterBoxSmall": null,
+                "masterBoxMedium": null
+            },
+            "sellPrice": 55,
+            "imageNames": null,
+            "productLineId": [
+                67,
+                79
+            ],
+            "objectID": "SLEGGCS194B",
+            "_highlightResult": {
+                "boxName": {
+                    "value": "Lost Kingdoms II, + Manual, Boxed",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                },
+                "categoryFriendlyName": {
+                    "value": "GameCube Rarities",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                }
+            }
+        }
+    ],
+    "nbHits": 207,
+    "page": 0,
+    "nbPages": 1,
+    "hitsPerPage": 1000,
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "exhaustive": {
+        "nbHits": true,
+        "typo": true
+    },
+    "query": "",
+    "params": "attributesToRetrieve=%5B%22boxName%22%2C%22imageUrls%22%2C%22boxId%22%2C%22sellPrice%22%2C%22imageNames%22%2C%22productLineId%22%5D&facetFilters=%5B%5B%22stores%3AAberdeen%22%5D%5D&filters=boxVisibilityOnWeb%3D1+AND+boxSaleAllowed%3D1+AND+%28+productLineId%3D67+OR+productLineId%3D59%29+AND+sellPrice+%3E+0+AND+%28inStockStore%3D1+OR+inStockOnline%3D1%29+AND+%28collectionQuantity%3E0+OR+ecomQuantity%3E0%29&hitsPerPage=1000&maxValuesPerFacet=1000&page=0&analyticsTags=CeXSearch",
+    "renderingContent": {},
+    "extensions": {
+        "queryCategorization": {}
+    },
+    "processingTimeMS": 7,
+    "processingTimingsMS": {
+        "_request": {
+            "roundTrip": 2
+        },
+        "afterFetch": {
+            "format": {
+                "total": 2
+            },
+            "merge": {
+                "entries": {
+                    "parse": 1,
+                    "total": 1
+                },
+                "mergeLoop": {
+                    "prepareNextHit": 1,
+                    "total": 1
+                },
+                "total": 1
+            },
+            "total": 1
+        },
+        "extensions": 1,
+        "fetch": {
+            "scanning": 2,
+            "total": 3
+        },
+        "rulesProcessing": {
+            "drr": 1,
+            "total": 1
+        },
+        "total": 7
+    },
+    "serverTimeMS": 10
+}

@@ -6,3 +6,11 @@ export type cexApiQueryModel = {
     maxValuesPerFacet: number,
     page: number
 }
+
+export type CexProductLine = {
+    superCatId: number,
+    productLineId: number,
+    productLineName: string,
+    totalCategories: number,
+    imageName: string
+}
