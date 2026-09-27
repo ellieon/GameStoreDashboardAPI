@@ -3,7 +3,7 @@
 ## Running locally for development
 Follow these steps to get the application up and running:
 * Create a file named `.env` at the root of the project and input the variables from the environment variables section into it
-* Run `npm install && npm install -g db-migrate` 
+* Run `npm install` 
 * Run `docker-compose up`
 * Run `npm run db:create`
 * Run `npm run start`

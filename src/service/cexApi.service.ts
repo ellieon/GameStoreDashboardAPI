@@ -2,8 +2,8 @@ import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { CexApiQueryModel, CexGameHit, CexProductLine, CexProductLineResponseModel, CexQueryResponseModel } from '../model/cexApiModel.js';
 import axios from 'axios';
 import { DatabaseService } from './database.service.js';
-import { getRequiredEnvVar } from '../common/getRequiredEnvVar.js';
 import { GameStore, GameStoreGame, GameStoreResponse } from '../model/gameStore.js';
+import { getRequiredEnvVar } from '../common/getRequiredEnvVar.js';
 
 @Injectable()
 export class CexApiService {

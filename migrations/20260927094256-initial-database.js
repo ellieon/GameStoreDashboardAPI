@@ -1,6 +1,6 @@
 'use strict';
-import { hashKeyWithSalt } from '../src/common/generateApiKey.js';
-import { getRequiredEnvVar } from '../src/common/getRequiredEnvVar.js';
+import { hashKeyWithSalt } from './common/generateApiKey.js';
+import { getRequiredEnvVar } from './common/getRequiredEnvVar.js';
 
 var dbm;
 var type;
