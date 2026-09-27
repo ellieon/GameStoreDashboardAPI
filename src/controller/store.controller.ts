@@ -1,10 +1,10 @@
 import { Controller, Get, Header, ParseArrayPipe, Query } from '@nestjs/common';
-import { CexApiService } from '../service/cexApi.service.js';
 import { GameStoreProductLineResponse, GameStoreResponse } from '../model/gameStore.js';
+import { StoreApiService } from '../service/storeApi.service.js';
 
-@Controller('/cex')
-export class CexController {
-  constructor(private readonly appService: CexApiService) {}
+@Controller('/store')
+export class StoreController {
+  constructor(private readonly appService: StoreApiService) {}
 
   @Get('/games')
   @Header('Content-Type', 'application/json')

@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
 
-import { CexController } from '../../src/controller/cex.controller.js';
-import { CexApiService } from '../../src/service/cexApi.service.js';
+import { StoreController } from '../../src/controller/store.controller.js';
+import { StoreApiService } from '../../src/service/storeApi.service.js';
 
-describe('CexController', () => {
-  let controller: CexController;
+describe('StoreController', () => {
+  let controller: StoreController;
 
   const mockService = {
     getListOfGamesForUser: vi.fn(),
@@ -14,16 +14,16 @@ describe('CexController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [CexController],
+      controllers: [StoreController],
       providers: [
         {
-          provide: CexApiService,
+          provide: StoreApiService,
           useValue: mockService,
         },
       ],
     }).compile();
 
-    controller = module.get(CexController);
+    controller = module.get(StoreController);
   });
 
   it('should return games', async () => {

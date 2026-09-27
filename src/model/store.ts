@@ -1,4 +1,4 @@
-export type CexApiQueryModel = {
+export type StoreApiQueryModel = {
     attributesToRetrieve: string[],
     facetFilters: string[],
     filters: string, 
@@ -7,11 +7,11 @@ export type CexApiQueryModel = {
     page: number
 }
 
-export type CexQueryResponseModel = {
-    hits: CexGameHit[],
+export type StoreQueryResponseModel = {
+    hits: StoreGameHit[],
 }
 
-export type CexProductLine = {
+export type StoreProductLine = {
     superCatId: number,
     productLineId: number,
     productLineName: string,
@@ -19,7 +19,7 @@ export type CexProductLine = {
     imageName: string
 }
 
-export type CexGameHit = {
+export type StoreGameHit = {
     boxName: string,
     sellPrice: number,
     productLineId: number[],
@@ -27,22 +27,22 @@ export type CexGameHit = {
     boxId: string
 }
 
-export type CexProductLineResponseModel = {
-    response: CexProductLineResponse
+export type StoreProductLineResponseModel = {
+    response: StoreProductLineResponse
 }
 
-export type CexProductLineResponse = {
+export type StoreProductLineResponse = {
     ack: string,
-    data: CexProductLineObject
-    error: CexProductLineError
+    data: StoreProductLineObject
+    error: StoreProductLineError
 
 }
 
-export type CexProductLineObject = {
-    productLines: CexProductLine[]
+export type StoreProductLineObject = {
+    productLines: StoreProductLine[]
 }
 
-export type CexProductLineError = {
+export type StoreProductLineError = {
     code: string,
     internalMessage: string,
     moreInfo: string[],

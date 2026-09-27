@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common';
-import { CexController } from '../controller/cex.controller.js';
-import { CexApiService } from '../service/cexApi.service.js';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { StoreController } from '../controller/store.controller.js';
+import { StoreApiService } from '../service/storeApi.service.js';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseService } from '../service/database.service.js';
+import { AuthService } from '../service/auth.service.js';
+import { AuthMiddleware } from '../middleware/auth.middleware.js';
 
 @Module({
   imports: [
@@ -10,7 +12,14 @@ import { DatabaseService } from '../service/database.service.js';
             isGlobal: true,   
         }),
     ],
-  controllers: [CexController],
-  providers: [CexApiService, DatabaseService],
+  controllers: [StoreController],
+  providers: [StoreApiService, DatabaseService, AuthService],
 })
-export class AppModule {}
+
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes('{*splat}');
+  }
+}

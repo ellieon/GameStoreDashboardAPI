@@ -4,9 +4,9 @@
             "boxId": "045496737313",
             "boxName": "New Super Mario Bros",
             "imageUrls": {
-                "large": "https://uk.static.webuy.com/product_images/Gaming/DS Software/045496737313_l.jpg",
-                "small": "https://uk.static.webuy.com/product_images/Gaming/DS Software/045496737313_s.jpg",
-                "medium": "https://uk.static.webuy.com/product_images/Gaming/DS Software/045496737313_m.jpg",
+                "large": "045496737313_l.jpg",
+                "small": "045496737313_s.jpg",
+                "medium": "045496737313_m.jpg",
                 "masterBoxLarge": null,
                 "masterBoxSmall": null,
                 "masterBoxMedium": null
@@ -69,9 +69,9 @@
             "boxName": "GameCube Wavebird Controller w/Receiver, B",
             "outOfStock": [],  
             "imageUrls": {
-                "large": "https://uk.static.webuy.com/product_images/Gaming/GameCube Controllers/SGCUGAME002_l.jpg",
-                "small": "https://uk.static.webuy.com/product_images/Gaming/GameCube Controllers/SGCUGAME002_s.jpg",
-                "medium": "https://uk.static.webuy.com/product_images/Gaming/GameCube Controllers/SGCUGAME002_m.jpg",
+                "large": "SGCUGAME002_l.jpg",
+                "small": "SGCUGAME002_s.jpg",
+                "medium": "SGCUGAME002_m.jpg",
                 "masterBoxLarge": null,
                 "masterBoxSmall": null,
                 "masterBoxMedium": null
@@ -102,9 +102,9 @@
             "boxName": "Metal Gear Solid Twin Snakes, No Manual, Boxed",
             "outOfStock": [],  
             "imageUrls": {
-                "large": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS227C_l.jpg",
-                "small": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS227C_s.jpg",
-                "medium": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS227C_m.jpg",
+                "large": "SLEGGCS227C_l.jpg",
+                "small": "SLEGGCS227C_s.jpg",
+                "medium": "SLEGGCS227C_m.jpg",
                 "masterBoxLarge": null,
                 "masterBoxSmall": null,
                 "masterBoxMedium": null

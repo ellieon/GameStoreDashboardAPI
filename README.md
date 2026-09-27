@@ -14,7 +14,7 @@ The following environment variables will need to be specified in a .env file in 
 
 `PORT` The port the api will bind to
 `QUERY_URL` The base url for the query API of the game store
-`CATEGORY_URL` The base url for the category API of the game store
+`CATEGORY_URL` The base url for the categigory API of the game store
 `DATABASE_URL` The database connection string for the PostgreSQL server that this server will use
   * If using the docker compose file, the default string `DATABASE_URL=postgresql://manager:password@localhost:5432/manager` will work
 `ADMIN_NAME` The username for the initial admin account

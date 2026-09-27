@@ -1,0 +1,218 @@
+{
+    "response": {
+        "ack": "Success",
+        "data": {
+            "productLines": [
+                {
+                    "superCatId": 1,
+                    "productLineId": 70,
+                    "productLineName": "3DS",
+                    "totalCategories": 3,
+                    "imageName": "3ds.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 92,
+                    "productLineName": "Board Games",
+                    "totalCategories": 2,
+                    "imageName": "board-games.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 59,
+                    "productLineName": "DS",
+                    "totalCategories": 3,
+                    "imageName": "ds.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 67,
+                    "productLineName": "GameCube",
+                    "totalCategories": 5,
+                    "imageName": "gamecube.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 74,
+                    "productLineName": "Gaming Accessories",
+                    "totalCategories": 51,
+                    "imageName": "gaming-accessories.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 39,
+                    "productLineName": "Gaming Consoles",
+                    "totalCategories": 38,
+                    "imageName": "gaming-consoles.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 116,
+                    "productLineName": "Gaming Controllers",
+                    "totalCategories": 13,
+                    "imageName": "gaming-controllers.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 79,
+                    "productLineName": "Gaming Software",
+                    "totalCategories": 42,
+                    "imageName": "gaming-software.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 115,
+                    "productLineName": "Graded Collectables",
+                    "totalCategories": 1,
+                    "imageName": "graded-collectables.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 102,
+                    "productLineName": "Handheld PCs",
+                    "totalCategories": 1,
+                    "imageName": "handheld-pcs.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 111,
+                    "productLineName": "Miniature Wargaming",
+                    "totalCategories": 12,
+                    "imageName": "miniature-wargaming.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 32,
+                    "productLineName": "PC Gaming",
+                    "totalCategories": 7,
+                    "imageName": "pc-gaming.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 61,
+                    "productLineName": "PlayStation 2",
+                    "totalCategories": 5,
+                    "imageName": "playstation-2.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 62,
+                    "productLineName": "PlayStation 3",
+                    "totalCategories": 4,
+                    "imageName": "playstation-3.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 76,
+                    "productLineName": "PlayStation 4",
+                    "totalCategories": 4,
+                    "imageName": "playstation-4.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 97,
+                    "productLineName": "PlayStation 5",
+                    "totalCategories": 4,
+                    "imageName": "playstation-5.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 21,
+                    "productLineName": "Portable Gaming",
+                    "totalCategories": 8,
+                    "imageName": "portable-gaming.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 80,
+                    "productLineName": "PS Vita",
+                    "totalCategories": 3,
+                    "imageName": "ps-vita.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 65,
+                    "productLineName": "PSP",
+                    "totalCategories": 4,
+                    "imageName": "psp.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 18,
+                    "productLineName": "Retro Gaming",
+                    "totalCategories": 54,
+                    "imageName": "retro-gaming.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 85,
+                    "productLineName": "Switch",
+                    "totalCategories": 4,
+                    "imageName": "switch.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 112,
+                    "productLineName": "Switch 2",
+                    "totalCategories": 4,
+                    "imageName": "switch-2.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 110,
+                    "productLineName": "Tonies and Yoto Players",
+                    "totalCategories": 1,
+                    "imageName": "tonies-and-yoto-players.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 60,
+                    "productLineName": "Wii",
+                    "totalCategories": 4,
+                    "imageName": "wii.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 73,
+                    "productLineName": "Wii U",
+                    "totalCategories": 4,
+                    "imageName": "wii-u.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 64,
+                    "productLineName": "Xbox",
+                    "totalCategories": 5,
+                    "imageName": "xbox.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 63,
+                    "productLineName": "Xbox 360",
+                    "totalCategories": 5,
+                    "imageName": "xbox-360.jpg"
+                },  
+                {
+                    "superCatId": 1,
+                    "productLineId": 75,
+                    "productLineName": "Xbox One",
+                    "totalCategories": 5,
+                    "imageName": "xbox-one.jpg"
+                },
+                {
+                    "superCatId": 1,
+                    "productLineId": 98,
+                    "productLineName": "Xbox Series",
+                    "totalCategories": 5,
+                    "imageName": "xbox-series.jpg"
+                }
+            ],
+            "cacheUpdatedTime": "2026-09-27 14:40:53"
+        },
+        "error": {
+            "code": "",
+            "internal_message": "",
+            "moreInfo": []
+        }
+    }
+}
