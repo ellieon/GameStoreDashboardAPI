@@ -1,7 +1,6 @@
 'use strict';
-import { generateApiKey, hashKeyWithSalt} from '../src/common/generateApiKey.js';
+import { hashKeyWithSalt } from '../src/common/generateApiKey.js';
 import { getRequiredEnvVar } from '../src/common/getRequiredEnvVar.js';
-import * as fs from 'fs';
 
 var dbm;
 var type;
@@ -31,7 +30,8 @@ export async function up(db) {
     },
     email: {
       type: 'text',
-      notNull: true
+      notNull: true,
+      unique: true
     }
   });
 
@@ -46,7 +46,7 @@ export async function up(db) {
       type: 'int',
       notNull: true
     },
-    api_key: {
+    api_key_hash: {
       type: 'text',
       notNull: true,
       unique: true
@@ -61,28 +61,29 @@ export async function up(db) {
       notNull: true
     }
 
-  }).then(async () => {
-    await db.addForeignKey('user_keys', 'users', 'user_keys_user_id_foreign',
-      {
-        'user_id': 'id'
-      },
-      {
-        onDelete: 'CASCADE',
-        onUpdate: 'RESTRICT',
-      }
-    )
-    const adminName = getRequiredEnvVar('ADMIN_NAME')
-    await db.insert('users', ['name', 'email'], [adminName, process.env.ADMIN_EMAIL])
-    const user = await db.runSql('select id from users where name = ?', [adminName])
-    const id = user.rows[0].id
-    const apiKey = getRequiredEnvVar('INITIAL_ADMIN_API_KEY')
-    await db.insert('user_keys', ['user_id', 'api_key', 'active', 'permissions'], [id, hashKeyWithSalt(apiKey, getRequiredEnvVar('API_SECRET')), true, JSON.stringify(["admin"])])
-    });
+  })
+
+  await db.addForeignKey('user_keys', 'users', 'user_keys_user_id_foreign',
+    {
+      'user_id': 'id'
+    },
+    {
+      onDelete: 'CASCADE',
+      onUpdate: 'RESTRICT',
+    }
+  )
+  const adminName = getRequiredEnvVar('ADMIN_NAME')
+  await db.insert('users', ['name', 'email'], [adminName, process.env.ADMIN_EMAIL])
+  const user = await db.runSql('select id from users where name = ?', [adminName])
+  const id = user.rows[0].id
+  const apiKey = getRequiredEnvVar('INITIAL_ADMIN_API_KEY')
+  await db.insert('user_keys', ['user_id', 'api_key_hash', 'active', 'permissions'], [id, hashKeyWithSalt(apiKey, getRequiredEnvVar('API_SECRET')), true, JSON.stringify(["admin"])])
+
   return null;
 };
 
 export async function down(db) {
-  await db.dropTable('users')
   await db.dropTable('user_keys')
+  await db.dropTable('users')
   return null;
 };
