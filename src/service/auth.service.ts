@@ -16,17 +16,11 @@ export class AuthService {
         return this.generateApiKey()
     }
 
-    public generateHashedToken(): any {
-        const token = this.generateToken()
-        const hashedToken = this.hashKeyWithSalt(token, this.apiSecret)
-        return {token: token, hashedtoken: hashedToken}
-    }
-
     public async verifyToken(token: string): Promise<User | undefined> {
         const hashedKey = this.hashKeyWithSalt(token,this.apiSecret)
         const user = await this.databaseService.getUserWithApiKey(hashedKey)
 
-        if (!user) {
+        if (!user) { 
              throw new UnauthorizedException('Invalid API key')
         }
 

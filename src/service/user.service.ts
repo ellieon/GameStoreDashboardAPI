@@ -21,7 +21,7 @@ export class UserService {
         return res
     }
 
-    public async getPreferencesForUser(user: User): Promise <UserPreferences> {
+    public async getPreferencesForUser(user: User): Promise<UserPreferences> {
         const res = await this.databaseService.getPreferencesForUser(user);
 
         if(!res){

@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import { Server } from 'http';
-import * as sampleResponseAberdeen from '../data/store-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
-import * as sampleResponseProductLines from '../data/store-api-sample-product-lines.json' with { type: 'json' };
+import * as sampleResponseAberdeen from '../../data/store-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
+import * as sampleResponseProductLines from '../../data/store-api-sample-product-lines.json' with { type: 'json' };
 
 export class MockStoreServer {
     private app: Express;

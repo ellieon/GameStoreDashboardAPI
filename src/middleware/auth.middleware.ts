@@ -16,6 +16,5 @@ export class AuthMiddleware implements NestMiddleware {
     const user = await this.authService.verifyToken(apiToken);
     (req as any).user = user;
     next();
-
   }
 }

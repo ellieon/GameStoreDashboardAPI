@@ -6,7 +6,7 @@ import { StoreApiService } from '../../src/service/storeApi.service.js';
 import { DatabaseService } from '../../src/service/database.service.js';
 import * as sampleResponseAcocks from '../data/store-api-sample-query-acocks-gc-ds.json' with { type: 'json' };
 import * as sampleResponseAberdeen from '../data/store-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
-import { StoreProductLine, StoreProductLineResponseModel } from '../../src/model/store.js';
+import { StoreProductLine, StoreProductLineResponseModel, StoreStoresResponseModel } from '../../src/model/store.js';
 import { ServiceUnavailableException } from '@nestjs/common';
 import { User } from '../../src/model/user.js';
 
@@ -285,4 +285,48 @@ describe('StoreApiService', () => {
         })
     })
 
+    describe('getStores', async () => {
+        it('Should return a list of stores on a successful connection to the store API ', async () => {
+            const spy = vi.spyOn(axios, 'get')
+            spy.mockResolvedValue({
+                data: {
+                    response: {
+                        data: {
+                            stores: [
+                                {
+                                    storeId: 1,
+                                    storeName: 'TestName',
+                                },
+                                {
+                                    storeId: 2,
+                                    storeName: 'TestName2',
+                                },
+                            ],
+                        },
+                    },
+                } as StoreStoresResponseModel
+            });
+
+            const result = await service.getStores();
+
+            expect(result).toEqual([
+                {
+                    storeId: 1,
+                    storeName: 'TestName',
+                },
+                {
+                    storeId: 2,
+                    storeName: 'TestName2',
+                },
+            ]);
+
+            expect(spy).toHaveBeenCalledOnce()
+        })
+
+        it('Should throw a ServiceUnavailableException when the store API is unavailable ', async () => {
+            const spy = vi.spyOn(axios, 'get')
+            spy.mockRejectedValue({});
+            await expect(service.getStores()).rejects.toThrow(ServiceUnavailableException)
+        })
+    })
 });
