@@ -1,5 +1,7 @@
 'use strict';
-import { generateApiKey } from '../src/common/generateApiKey.js';
+import { generateApiKey, hashKeyWithSalt} from '../src/common/generateApiKey.js';
+import { getRequiredEnvVar } from '../src/common/getRequiredEnvVar.js';
+import * as fs from 'fs';
 
 var dbm;
 var type;
@@ -15,7 +17,7 @@ export async function setup(options, seedLink) {
 };
 
 export async function up(db) {
-  db.createTable('users', {
+  await db.createTable('users', {
     id: {
       type: 'int',
       primaryKey: true,
@@ -25,6 +27,7 @@ export async function up(db) {
     name: {
       type: 'text',
       notNull: true,
+      unique: true
     },
     email: {
       type: 'text',
@@ -32,7 +35,7 @@ export async function up(db) {
     }
   });
 
-  db.createTable('user_keys', {
+  await db.createTable('user_keys', {
     id: {
       type: 'int',
       primaryKey: true,
@@ -58,8 +61,8 @@ export async function up(db) {
       notNull: true
     }
 
-  }).then(() => {
-    db.addForeignKey('user_keys', 'users', 'user_keys_user_id_foreign',
+  }).then(async () => {
+    await db.addForeignKey('user_keys', 'users', 'user_keys_user_id_foreign',
       {
         'user_id': 'id'
       },
@@ -68,14 +71,18 @@ export async function up(db) {
         onUpdate: 'RESTRICT',
       }
     )
-    db.insert('users', ['name', 'email'], [process.env.ADMIN_NAME, process.env.ADMIN_EMAIL])
-    db.insert('user_keys', ['user_id', 'api_key', 'active', 'permissions'], [1, generateApiKey(), true, JSON.stringify(["admin"])])
-  });
+    const adminName = getRequiredEnvVar('ADMIN_NAME')
+    await db.insert('users', ['name', 'email'], [adminName, process.env.ADMIN_EMAIL])
+    const user = await db.runSql('select id from users where name = ?', [adminName])
+    const id = user.rows[0].id
+    const apiKey = getRequiredEnvVar('INITIAL_ADMIN_API_KEY')
+    await db.insert('user_keys', ['user_id', 'api_key', 'active', 'permissions'], [id, hashKeyWithSalt(apiKey, getRequiredEnvVar('API_SECRET')), true, JSON.stringify(["admin"])])
+    });
   return null;
 };
 
 export async function down(db) {
-  db.dropTable('games')
-  db.dropTable('settings')
+  await db.dropTable('users')
+  await db.dropTable('user_keys')
   return null;
 };

@@ -32,6 +32,7 @@
     "class-validator": "^0.15.1",
     "db-migrate": "^0.11.14",
     "db-migrate-pg": "^1.5.2",
+    "jssha": "^3.3.2",
     "qs": "^6.16.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"

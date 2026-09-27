@@ -19,6 +19,8 @@ The following environment variables will need to be specified in a .env file in 
   * If using the docker compose file, the default string `DATABASE_URL=postgresql://manager:password@localhost:5432/manager` will work
 `ADMIN_NAME` The username for the initial admin account
 `ADMIN_EMAIL` The email for the initial admin account 
+`API_SECRET` Secret that will be used to salt api keys before hashing 
+`INITIAL_ADMIN_API_KEY` The initial API key that will be seeded into the database
 
 ## Getting the admin API key for making calls
 * Go to adminer `http://localhost:8080`, find the record created in the user_keys table and add the `api_key` column there can be used for all api calls
