@@ -4,3 +4,8 @@ export type User = {
     email: string,
     permissions: string[]
 }
+
+export type UserPreferences = {
+    stores: string[],
+    categories: string[]
+}

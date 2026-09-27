@@ -1,6 +1,7 @@
-import { Controller, Get, Header, ParseArrayPipe, Query } from '@nestjs/common';
+import { Controller, Get, Header, ParseArrayPipe, Query, Req } from '@nestjs/common';
 import { GameStoreProductLineResponse, GameStoreResponse } from '../model/gameStore.js';
 import { StoreApiService } from '../service/storeApi.service.js';
+import { AuthService } from '../service/auth.service.js';
 
 @Controller('/store')
 export class StoreController {
@@ -8,8 +9,8 @@ export class StoreController {
 
   @Get('/games')
   @Header('Content-Type', 'application/json')
-  async getGames(): Promise<GameStoreResponse> {
-    const res = await this.appService.getListOfGamesForUser();
+  async getGames(@Req() request: Request): Promise<GameStoreResponse> {
+    const res = await this.appService.getListOfGamesForUser((request as any).user);
     return res;
   }
 

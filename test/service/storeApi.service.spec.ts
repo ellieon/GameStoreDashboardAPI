@@ -8,15 +8,22 @@ import * as sampleResponseAcocks from '../data/store-api-sample-query-acocks-gc-
 import * as sampleResponseAberdeen from '../data/store-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
 import { StoreProductLine, StoreProductLineResponseModel } from '../../src/model/store.js';
 import { ServiceUnavailableException } from '@nestjs/common';
+import { User } from '../../src/model/user.js';
 
 vi.mock('axios');
 
 describe('StoreApiService', () => {
     let service: StoreApiService;
 
+    const user: User = {
+        id: 1,
+        name: '',
+        email: '',
+        permissions: []
+    }
+
     const mockDatabaseService = {
-        getStoresForUser: vi.fn(),
-        getCategoriesForUser: vi.fn(),
+        getPreferencesForUser: vi.fn()
     };
 
     beforeEach(async () => {
@@ -77,8 +84,10 @@ describe('StoreApiService', () => {
 
     describe('getListOfGamesForUser()', async () => {
         it('When the user has selected a single store and multiple catagories, should build a response containing everything that matches', async () => {
-            mockDatabaseService.getStoresForUser.mockReturnValue(['Acocks Green']);
-            mockDatabaseService.getCategoriesForUser.mockReturnValue(['67', '59']);
+            mockDatabaseService.getPreferencesForUser.mockReturnValue({
+                categories: ['67', '59'],
+                stores: ['Acocks Green']
+            })
 
             const getProductLineSpy = vi.spyOn(service, 'getProductLines')
             const axiosPostSpy = vi.spyOn(axios, 'post')
@@ -98,7 +107,7 @@ describe('StoreApiService', () => {
                 data: sampleResponseAcocks,
             });
 
-            const result = await service.getListOfGamesForUser();
+            const result = await service.getListOfGamesForUser(user);
 
             expect(result).toMatchObject({
                 stores: [
@@ -145,8 +154,11 @@ describe('StoreApiService', () => {
         });
 
         it('When the user has selected multiple stores and multiple catagories, should build a combined response containing everything that matches', async () => {
-            mockDatabaseService.getStoresForUser.mockReturnValue(['Acocks Green', 'Aberdeen']);
-            mockDatabaseService.getCategoriesForUser.mockReturnValue(['67', '59']);
+
+            mockDatabaseService.getPreferencesForUser.mockReturnValue({
+                categories: ['67', '59'],
+                stores: ['Acocks Green', 'Aberdeen']
+            })
 
             const productLinesSpy = vi.spyOn(service, 'getProductLines')
             const axiosPostSpy = vi.spyOn(axios, 'post')
@@ -172,7 +184,7 @@ describe('StoreApiService', () => {
                 } as any
             });
 
-            const result = await service.getListOfGamesForUser();
+            const result = await service.getListOfGamesForUser(user);
 
             expect(result).toMatchObject({
                 stores: [
@@ -247,8 +259,10 @@ describe('StoreApiService', () => {
         });
 
         it('When the store api is down a ServiceUnavailableError should be thrown', async () => {
-            mockDatabaseService.getStoresForUser.mockReturnValue(['Acocks Green']);
-            mockDatabaseService.getCategoriesForUser.mockReturnValue(['67', '59']);
+            mockDatabaseService.getPreferencesForUser.mockReturnValue({
+                categories: ['67', '59'],
+                stores: ['Acocks Green']
+            })
 
             const productLinesSpy = vi.spyOn(service, 'getProductLines')
             const axiosPostSpy = vi.spyOn(axios, 'post')
@@ -266,7 +280,7 @@ describe('StoreApiService', () => {
 
             axiosPostSpy.mockRejectedValue({});
 
-            await expect(service.getListOfGamesForUser()).rejects.toThrow(ServiceUnavailableException)
+            await expect(service.getListOfGamesForUser(user)).rejects.toThrow(ServiceUnavailableException)
 
         })
     })

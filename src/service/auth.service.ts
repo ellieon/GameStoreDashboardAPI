@@ -16,6 +16,12 @@ export class AuthService {
         return this.generateApiKey()
     }
 
+    public generateHashedToken(): any {
+        const token = this.generateToken()
+        const hashedToken = this.hashKeyWithSalt(token, this.apiSecret)
+        return {token: token, hashedtoken: hashedToken}
+    }
+
     public async verifyToken(token: string): Promise<User | undefined> {
         const hashedKey = this.hashKeyWithSalt(token,this.apiSecret)
         const user = await this.databaseService.getUserWithApiKey(hashedKey)
@@ -26,8 +32,7 @@ export class AuthService {
 
         return user
     }
-
-
+    
     private generateApiKey(size: number = 32, format: BufferEncoding = 'base64') {
         const buffer = randomBytes(size);
         return buffer.toString(format);

@@ -13,9 +13,9 @@ export class AuthMiddleware implements NestMiddleware {
       throw new UnauthorizedException('Missing API Token');
     }
 
-      const user = await this.authService.verifyToken(apiToken);
-      (req as any).user = user;
-      next();
+    const user = await this.authService.verifyToken(apiToken);
+    (req as any).user = user;
+    next();
 
   }
 }

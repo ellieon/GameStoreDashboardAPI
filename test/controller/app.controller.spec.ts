@@ -3,6 +3,7 @@ import { describe, it, beforeEach, expect, vi } from 'vitest';
 
 import { StoreController } from '../../src/controller/store.controller.js';
 import { StoreApiService } from '../../src/service/storeApi.service.js';
+import { User } from '../../src/model/user.js';
 
 describe('StoreController', () => {
   let controller: StoreController;
@@ -31,7 +32,17 @@ describe('StoreController', () => {
       stores: [],
     });
 
-    const result = await controller.getGames();
+    const user: User = {
+      id: 0,
+      name: '',
+      email: '',
+      permissions: []
+    }
+    const req: any = {
+      user: user
+    }
+
+    const result = await controller.getGames(req as Request);
 
     expect(result).toEqual({
       stores: [],
@@ -48,7 +59,7 @@ describe('StoreController', () => {
     const result = await controller.getProductLines([1]);
 
     expect(result).toEqual(
-      { 
+      {
         productLines: [
           {
             productLineId: 1,

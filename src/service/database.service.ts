@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { getRequiredEnvVar } from "../common/getRequiredEnvVar.js";
 import { Pool } from 'pg'
-import { User } from "../model/user.js";
+import { User, UserPreferences } from "../model/user.js";
 
 @Injectable()
 export class DatabaseService {
@@ -11,13 +11,15 @@ export class DatabaseService {
         this.pool = new Pool({connectionString: getRequiredEnvVar('DATABASE_URL')})
     }
 
-  
-    public async getCategoriesForUser(): Promise<string[]> {
-        return ['67', '70']// '59', '61', '62', '80', '65', '18', '73'] //60
-    }
-
-    public async getStoresForUser(): Promise<string[]> {
-        return ['Solihull', 'Acocks Green'] 
+    public async getPreferencesForUser(user: User): Promise<UserPreferences | undefined> {
+        const res = await this.pool.query('SELECT * FROM users JOIN user_prefs ON users.id = user_prefs.user_id WHERE user_prefs.user_id = $1', [user.id])
+        if(res.rowCount === 1) {
+            return {
+                stores: res.rows[0].stores,
+                categories: res.rows[0].categories
+            }
+        }
+        return undefined
     }
 
     public async getUserWithApiKey(hashedApiKey: string): Promise<User | undefined> {

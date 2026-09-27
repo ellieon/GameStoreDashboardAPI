@@ -1,9 +1,10 @@
-import { Injectable, ServiceUnavailableException } from '@nestjs/common';
+import { BadRequestException, Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { StoreApiQueryModel, StoreGameHit, StoreProductLine, StoreProductLineResponseModel, StoreQueryResponseModel } from '../model/store.js';
 import axios from 'axios';
 import { DatabaseService } from './database.service.js';
 import { GameStore, GameStoreGame, GameStoreResponse } from '../model/gameStore.js';
 import { getRequiredEnvVar } from '../common/getRequiredEnvVar.js';
+import { User } from '../model/user.js';
 
 @Injectable()
 export class StoreApiService {
@@ -21,12 +22,19 @@ export class StoreApiService {
     private databaseService: DatabaseService
   ) { }
 
-  public async getListOfGamesForUser(): Promise<GameStoreResponse> {
-    const stores = (await this.databaseService.getStoresForUser()).sort((a, b) =>
+  public async getListOfGamesForUser(user: User): Promise<GameStoreResponse> {
+
+    const preferences = await this.databaseService.getPreferencesForUser(user)
+
+    if(!preferences) {
+        throw new BadRequestException('Preferences for user not set')
+    }
+
+    const stores = preferences.stores.sort((a, b) =>
       a.localeCompare(b)
     );
 
-    const categories = (await this.databaseService.getCategoriesForUser()).sort((a, b) =>
+    const categories =  preferences.categories.sort((a, b) =>
       a.localeCompare(b)
     );
 
@@ -52,7 +60,7 @@ export class StoreApiService {
 
       return { stores: storeData }
     } catch (error) {
-      throw new ServiceUnavailableException(error, 'Unable to connect to CeX endpoint')
+      throw new ServiceUnavailableException(error, 'Unable to connect to store endpoint')
     }
   }
 
@@ -70,7 +78,7 @@ export class StoreApiService {
       })
       return response.data.response.data.productLines
     } catch (error) {
-      throw new ServiceUnavailableException(error, 'Unable to connect to CeX endpoint')
+      throw new ServiceUnavailableException(error, 'Unable to connect to store endpoint')
     }
 
   }

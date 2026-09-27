@@ -72,6 +72,7 @@ export async function up(db) {
       onUpdate: 'RESTRICT',
     }
   )
+   
   const adminName = getRequiredEnvVar('ADMIN_NAME')
   await db.insert('users', ['name', 'email'], [adminName, process.env.ADMIN_EMAIL])
   const user = await db.runSql('select id from users where name = ?', [adminName])

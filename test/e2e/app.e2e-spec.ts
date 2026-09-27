@@ -25,8 +25,10 @@ describe('StoreController', async () => {
     beforeEach(async () => {
         mockDatabaseService = {
             getUserWithApiKey: vi.fn(),
-            getCategoriesForUser: vi.fn().mockResolvedValue(['67', '70']),
-            getStoresForUser: vi.fn().mockResolvedValue(['Solihull', 'Acocks Green'])
+            getPreferencesForUser: vi.fn().mockResolvedValue({
+                stores: ['Aberdeen', 'Acocks Green'],
+                categories: ['67', '70']
+            })
         }
 
         moduleFixture = await Test.createTestingModule({
@@ -70,7 +72,10 @@ describe('StoreController', async () => {
                 id: 1
             })
 
-            mockDatabaseService.getStoresForUser = vi.fn().mockResolvedValue(['67', '70'])
+            getPreferencesForUser: vi.fn().mockResolvedValue({
+                stores: ['Aberdeen', 'Acocks Green'],
+                categories: ['67', '70']
+            })
             
             const response = await request(app.getHttpServer())
                 .get('/store/games')
@@ -105,7 +110,10 @@ describe('StoreController', async () => {
                 id: 1
             })
 
-            mockDatabaseService.getStoresForUser = vi.fn().mockResolvedValue(['67', '70'])
+            getPreferencesForUser: vi.fn().mockResolvedValue({
+                stores: ['Aberdeen', 'Acocks Green'],
+                categories: ['67', '70']
+            })
             
             const response = await request(app.getHttpServer())
                 .get('/store/product-lines?superCatIds=1')
