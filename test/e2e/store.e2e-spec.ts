@@ -12,6 +12,7 @@ let moduleFixture: TestingModule
 let mockApi: MockStoreServer
 
 beforeEach(async () => {
+    vi.clearAllMocks();
     mockDatabaseService = {
         getUserWithApiKey: vi.fn(),
         getPreferencesForUser: vi.fn().mockResolvedValue({

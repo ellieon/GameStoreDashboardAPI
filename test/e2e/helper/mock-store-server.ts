@@ -2,10 +2,12 @@ import express, { Express, Request, Response } from 'express';
 import { Server } from 'http';
 import * as sampleResponseAberdeen from '../../data/store-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
 import * as sampleResponseProductLines from '../../data/store-api-sample-product-lines.json' with { type: 'json' };
+import * as sampleResponseStores from '../../data/store-api-sample-stores.json' with { type: 'json' };
 
 export class MockStoreServer {
     private app: Express;
     private server?: Server;
+    private rejectNext: boolean = false;
 
     constructor(private readonly port: number) {
         this.app = express();
@@ -16,13 +18,18 @@ export class MockStoreServer {
 
     private setupRoutes(): void {
         this.app.post('/', (_req: Request, res: Response) => {
-            console.log('Mock server has been called')
+            
             res.json(sampleResponseAberdeen);
         });
 
         this.app.get('/productlines', (_req: Request, res: Response) => {
-            console.log('Product lines mock has been called')
+
             res.json(sampleResponseProductLines);
+        });
+
+        this.app.get('/stores', (_req: Request, res: Response) => {
+
+            res.json(sampleResponseStores);
         });
     }
 
