@@ -116,7 +116,3 @@ describe('StoreController', async () => {
     })
 
 });
-
-function express(): any {
-    throw new Error('Function not implemented.');
-}

@@ -12,7 +12,7 @@ export class AuthService {
     constructor(private readonly databaseService: DatabaseService){
         this.apiSecret = getRequiredEnvVar('API_SECRET')
     }
-    public generateToken(user: User): string {
+    public generateToken(): string {
         return this.generateApiKey()
     }
 
