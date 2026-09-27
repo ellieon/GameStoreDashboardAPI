@@ -40,8 +40,14 @@ export class CexApiService {
           axios.post<CexQueryResponseModel>(url, this.buildQueryParameters(store, categories))
         )
       )
-      storeData = results.map(result =>
-        this.buildStoreObjFromGames(result.data.hits, stores[results.indexOf(result)], categories, productLines)
+      
+      storeData = results.map((result, index) =>
+        this.buildStoreObjFromGames(
+          result.data.hits,
+          stores[index],
+          categories,
+          productLines
+        )
       )
 
       return { stores: storeData }
@@ -52,7 +58,7 @@ export class CexApiService {
 
   public async getProductLines(...superCatIds: number[]): Promise<CexProductLine[]> {
     if (superCatIds.length === 0)
-      superCatIds = [1, 55]
+      superCatIds = [1]
 
     const url = getRequiredEnvVar('CEX_CATEGORY_URL')
 
@@ -92,7 +98,7 @@ export class CexApiService {
     );
 
     sortedData.forEach(game => {
-      if (game.outOfStock.indexOf(store) == -1) {
+      if (!game.outOfStock.includes(store)) {
         storeObj.availableBoxIds.push(game.boxId)
         storeObj.categories.forEach((category: {
           games: GameStoreGame[]; id: number;
