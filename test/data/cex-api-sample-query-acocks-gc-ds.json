@@ -1,0 +1,183 @@
+{
+    "hits": [
+        {
+            "boxId": "045496737313",
+            "boxName": "New Super Mario Bros",
+            "imageUrls": {
+                "large": "https://uk.static.webuy.com/product_images/Gaming/DS Software/045496737313_l.jpg",
+                "small": "https://uk.static.webuy.com/product_images/Gaming/DS Software/045496737313_s.jpg",
+                "medium": "https://uk.static.webuy.com/product_images/Gaming/DS Software/045496737313_m.jpg",
+                "masterBoxLarge": null,
+                "masterBoxSmall": null,
+                "masterBoxMedium": null
+            },
+            "outOfStock": [],  
+            "sellPrice": 20,
+            "imageNames": null,
+            "productLineId": [
+                59,
+                79
+            ],
+            "objectID": "045496737313",
+            "_highlightResult": {
+                "boxName": {
+                    "value": "New Super Mario Bros",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                },
+                "categoryFriendlyName": {
+                    "value": "Nintendo DS Games",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                }
+            }
+        },
+        {
+            "boxId": "045496741075",
+            "boxName": "Professor Layton and the Lost Future",
+            "outOfStock": [],  
+            "imageUrls": {
+                "large": "https://uk.static.webuy.com/product_images/Gaming/DS Software/045496741075_l.jpg",
+                "small": "https://uk.static.webuy.com/product_images/Gaming/DS Software/045496741075_s.jpg",
+                "medium": "https://uk.static.webuy.com/product_images/Gaming/DS Software/045496741075_m.jpg",
+                "masterBoxLarge": null,
+                "masterBoxSmall": null,
+                "masterBoxMedium": null
+            },
+            "sellPrice": 5,
+            "imageNames": null,
+            "productLineId": [
+                59,
+                79
+            ],
+            "objectID": "045496741075",
+            "_highlightResult": {
+                "boxName": {
+                    "value": "Professor Layton and the Lost Future",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                },
+                "categoryFriendlyName": {
+                    "value": "Nintendo DS Games",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                }
+            }
+        },
+        {
+            "boxId": "SGCUGAME002",
+            "boxName": "GameCube Wavebird Controller w/Receiver, B",
+            "outOfStock": [],  
+            "imageUrls": {
+                "large": "https://uk.static.webuy.com/product_images/Gaming/GameCube Controllers/SGCUGAME002_l.jpg",
+                "small": "https://uk.static.webuy.com/product_images/Gaming/GameCube Controllers/SGCUGAME002_s.jpg",
+                "medium": "https://uk.static.webuy.com/product_images/Gaming/GameCube Controllers/SGCUGAME002_m.jpg",
+                "masterBoxLarge": null,
+                "masterBoxSmall": null,
+                "masterBoxMedium": null
+            },
+            "sellPrice": 75,
+            "imageNames": null,
+            "productLineId": [
+                67,
+                74,
+                116
+            ],
+            "objectID": "SGCUGAME002",
+            "_highlightResult": {
+                "boxName": {
+                    "value": "GameCube Wavebird Controller w/Receiver, B",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                },
+                "categoryFriendlyName": {
+                    "value": "GameCube Controllers",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                }
+            }
+        },
+        {
+            "boxId": "SLEGGCS227C",
+            "boxName": "Metal Gear Solid Twin Snakes, No Manual, Boxed",
+            "outOfStock": [],  
+            "imageUrls": {
+                "large": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS227C_l.jpg",
+                "small": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS227C_s.jpg",
+                "medium": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS227C_m.jpg",
+                "masterBoxLarge": null,
+                "masterBoxSmall": null,
+                "masterBoxMedium": null
+            },
+            "sellPrice": 65,
+            "imageNames": null,
+            "productLineId": [
+                67,
+                79
+            ],
+            "objectID": "SLEGGCS227C",
+            "_highlightResult": {
+                "boxName": {
+                    "value": "Metal Gear Solid Twin Snakes, No Manual, Boxed",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                },
+                "categoryFriendlyName": {
+                    "value": "GameCube Rarities",
+                    "matchLevel": "none",
+                    "matchedWords": []
+                }
+            }
+        }
+    ],
+    "nbHits": 4,
+    "page": 0,
+    "nbPages": 1,
+    "hitsPerPage": 1000,
+    "exhaustiveNbHits": true,
+    "exhaustiveTypo": true,
+    "exhaustive": {
+        "nbHits": true,
+        "typo": true
+    },
+    "query": "",
+    "params": "attributesToRetrieve=%5B%22boxName%22%2C%22imageUrls%22%2C%22boxId%22%2C%22sellPrice%22%2C%22imageNames%22%2C%22productLineId%22%5D&facetFilters=%5B%5B%22stores%3AAcocks+Green%22%5D%5D&filters=boxVisibilityOnWeb%3D1+AND+boxSaleAllowed%3D1+AND+%28+productLineId%3D67+OR+productLineId%3D59%29+AND+sellPrice+%3E+0+AND+%28inStockStore%3D1+OR+inStockOnline%3D1%29+AND+%28collectionQuantity%3E0+OR+ecomQuantity%3E0%29&hitsPerPage=1000&maxValuesPerFacet=1000&page=0&analyticsTags=CeXSearch",
+    "renderingContent": {},
+    "extensions": {
+        "queryCategorization": {}
+    },
+    "processingTimeMS": 9,
+    "processingTimingsMS": {
+        "_request": {
+            "queue": 58,
+            "roundTrip": 2
+        },
+        "afterFetch": {
+            "format": {
+                "total": 2
+            },
+            "merge": {
+                "entries": {
+                    "total": 1
+                },
+                "mergeLoop": {
+                    "prepareNextHit": 1,
+                    "total": 1
+                },
+                "total": 1
+            },
+            "total": 1
+        },
+        "extensions": 1,
+        "fetch": {
+            "scanning": 3,
+            "total": 4
+        },
+        "rulesProcessing": {
+            "drr": 1,
+            "total": 1
+        },
+        "total": 9
+    },
+    "serverTimeMS": 69
+}
