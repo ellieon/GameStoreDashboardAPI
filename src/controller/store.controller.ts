@@ -1,7 +1,6 @@
 import { Controller, Get, Header, ParseArrayPipe, Query, Req } from '@nestjs/common';
 import { GameStoreProductLineResponse, GameStoreResponse } from '../model/gameStore.js';
 import { StoreApiService } from '../service/storeApi.service.js';
-import { AuthService } from '../service/auth.service.js';
 
 @Controller('/store')
 export class StoreController {

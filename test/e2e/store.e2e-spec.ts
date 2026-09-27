@@ -4,14 +4,40 @@ import dotenv from 'dotenv'
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../../src/modules/app.module.js';
 import { DatabaseService } from '../../src/service/database.service.js';
-import { MockStoreServer } from './mock-store-server.js';
+import { MockStoreServer } from './helper/mock-store-server.js';
 
+let app: INestApplication;
+let mockDatabaseService: Partial<DatabaseService>
+let moduleFixture: TestingModule
+let mockApi: MockStoreServer
+
+beforeEach(async () => {
+    mockDatabaseService = {
+        getUserWithApiKey: vi.fn(),
+        getPreferencesForUser: vi.fn().mockResolvedValue({
+            stores: ['Aberdeen', 'Acocks Green'],
+            categories: ['67', '70']
+        })
+    }
+
+    moduleFixture = await Test.createTestingModule({
+        imports: [AppModule]
+    })
+        .overrideProvider(DatabaseService)
+        .useValue(mockDatabaseService)
+        .compile();
+
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+
+    dotenv.config({
+        path: '.env.e2e',
+        override: true,
+    });
+});
 
 describe('StoreController', async () => {
-    let app: INestApplication;
-    let mockDatabaseService: Partial<DatabaseService>
-    let moduleFixture: TestingModule
-    let mockApi: MockStoreServer
 
     beforeAll(async () => {
         mockApi = new MockStoreServer(3002);
@@ -20,32 +46,6 @@ describe('StoreController', async () => {
 
     afterAll(async () => {
         await mockApi.stop();
-    });
-
-    beforeEach(async () => {
-        mockDatabaseService = {
-            getUserWithApiKey: vi.fn(),
-            getPreferencesForUser: vi.fn().mockResolvedValue({
-                stores: ['Aberdeen', 'Acocks Green'],
-                categories: ['67', '70']
-            })
-        }
-
-        moduleFixture = await Test.createTestingModule({
-            imports: [AppModule]
-        })
-            .overrideProvider(DatabaseService)
-            .useValue(mockDatabaseService)
-            .compile();
-
-  
-        app = moduleFixture.createNestApplication();
-        await app.init();
-
-        dotenv.config({
-            path: '.env.e2e',
-            override: true,
-        });
     });
 
     describe('/games', async () => {
@@ -72,11 +72,11 @@ describe('StoreController', async () => {
                 id: 1
             })
 
-            getPreferencesForUser: vi.fn().mockResolvedValue({
+            mockDatabaseService.getPreferencesForUser = vi.fn().mockResolvedValue({
                 stores: ['Aberdeen', 'Acocks Green'],
                 categories: ['67', '70']
             })
-            
+
             const response = await request(app.getHttpServer())
                 .get('/store/games')
                 .set('x-api-key', 'api key')
@@ -91,7 +91,7 @@ describe('StoreController', async () => {
                 .get('/store/g')
             expect(response.statusCode).toBe(401)
             expect(response.body.message).toBe('Missing API Token')
-            
+
         })
 
         it('should return a 401 not authorised when an api key that does not exist is provided', async () => {
@@ -110,11 +110,11 @@ describe('StoreController', async () => {
                 id: 1
             })
 
-            getPreferencesForUser: vi.fn().mockResolvedValue({
+            mockDatabaseService.getPreferencesForUser =  vi.fn().mockResolvedValue({
                 stores: ['Aberdeen', 'Acocks Green'],
                 categories: ['67', '70']
             })
-            
+
             const response = await request(app.getHttpServer())
                 .get('/store/product-lines?superCatIds=1')
                 .set('x-api-key', 'api key')
@@ -124,3 +124,4 @@ describe('StoreController', async () => {
     })
 
 });
+

@@ -7,6 +7,7 @@ import { User, UserPreferences } from "../model/user.js";
 export class DatabaseService {
 
     private pool: Pool
+    
     constructor(){
         this.pool = new Pool({connectionString: getRequiredEnvVar('DATABASE_URL')})
     }
@@ -20,6 +21,20 @@ export class DatabaseService {
             }
         }
         return undefined
+    }
+
+    public async updatePreferencesForUser(user: User, stores: string[], categories: string[]): Promise<UserPreferences | undefined> {
+        const query: string = `UPDATE user_prefs SET stores = $1, categories = $2 WHERE user_id = $3`
+        const res = await this.pool.query(query, [JSON.stringify(stores), JSON.stringify(categories), user.id])
+
+        if(res.rowCount === 0 )
+            return undefined
+
+        return {
+            stores: stores,
+            categories: categories
+        };
+        
     }
 
     public async getUserWithApiKey(hashedApiKey: string): Promise<User | undefined> {

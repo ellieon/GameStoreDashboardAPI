@@ -5,6 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseService } from '../service/database.service.js';
 import { AuthService } from '../service/auth.service.js';
 import { AuthMiddleware } from '../middleware/auth.middleware.js';
+import { UserController } from '../controller/user.controller.js';
+import { UserService } from '../service/user.service.js';
+import { AdminMiddleware } from '../middleware/admin.middleware.js';
 
 @Module({
   imports: [
@@ -12,8 +15,8 @@ import { AuthMiddleware } from '../middleware/auth.middleware.js';
             isGlobal: true,   
         }),
     ],
-  controllers: [StoreController],
-  providers: [StoreApiService, DatabaseService, AuthService],
+  controllers: [StoreController, UserController],
+  providers: [StoreApiService, DatabaseService, AuthService, UserService],
 })
 
 export class AppModule implements NestModule {
@@ -21,5 +24,9 @@ export class AppModule implements NestModule {
     consumer
       .apply(AuthMiddleware)
       .forRoutes('{*splat}');
+      
+    consumer
+      .apply(AdminMiddleware)
+      .forRoutes('/user/admin')
   }
 }

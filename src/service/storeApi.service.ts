@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { StoreApiQueryModel, StoreGameHit, StoreProductLine, StoreProductLineResponseModel, StoreQueryResponseModel } from '../model/store.js';
+import { StoreApiQueryModel, StoreGameHit, StoreProductLine, StoreProductLineResponseModel, StoreQueryResponseModel, StoreStoresResponseModel, StoreStore } from '../model/store.js';
 import axios from 'axios';
 import { DatabaseService } from './database.service.js';
 import { GameStore, GameStoreGame, GameStoreResponse } from '../model/gameStore.js';
@@ -9,15 +9,6 @@ import { User } from '../model/user.js';
 @Injectable()
 export class StoreApiService {
 
-  private static readonly DEFAULT_PRODUCT_LINES: number[] = [
-    1, //Gaming
-    4, //Phones
-    3, //Computing
-    5, //Electronics
-    2, // Film
-    9, // New Accessories
-    10 // Apparel
-  ]
   constructor(
     private databaseService: DatabaseService
   ) { }
@@ -59,8 +50,8 @@ export class StoreApiService {
       )
 
       return { stores: storeData }
-    } catch (error) {
-      throw new ServiceUnavailableException(error, 'Unable to connect to store endpoint')
+    } catch {
+      throw new ServiceUnavailableException('Unable to connect to store endpoint')
     }
   }
 
@@ -77,10 +68,22 @@ export class StoreApiService {
         }
       })
       return response.data.response.data.productLines
-    } catch (error) {
-      throw new ServiceUnavailableException(error, 'Unable to connect to store endpoint')
+    } catch {
+      throw new ServiceUnavailableException('Unable to connect to store endpoint')
     }
 
+  }
+
+  public async getStores(): Promise<StoreStore[]> {
+     const url = getRequiredEnvVar('CATEGORY_URL')
+
+    try {
+      const response = await axios.get<StoreStoresResponseModel>(`${url}/stores`)
+      
+      return response.data.response.data.stores
+    } catch {
+      throw new ServiceUnavailableException('Unable to connect to store endpoint')
+    }
   }
 
   private buildStoreObjFromGames(inputData: StoreGameHit[], store: string, categories: string[], productLines: StoreProductLine[]): GameStore {
@@ -88,7 +91,6 @@ export class StoreApiService {
 
     const storeObj: GameStore = {
       name: store,
-      availableBoxIds: ids,
       categories: categories.map(category => {
         const productLine = productLines.find(productLine => {
           return String(productLine.productLineId) === category
@@ -98,7 +100,8 @@ export class StoreApiService {
           name: productLine?.productLineName,
           games: []
         }
-      })
+      }),
+      availableBoxIds: ids
     }
 
     const sortedData = inputData.sort((a, b) =>

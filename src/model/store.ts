@@ -31,6 +31,26 @@ export type StoreProductLineResponseModel = {
     response: StoreProductLineResponse
 }
 
+export type StoreStoresResponseModel = {
+    response: StoreStoresResponse
+}
+
+export type StoreStoresResponse = {
+    ack: string,
+    data: StoreStoresObject
+    error: StoreProductLineError
+
+}
+export type StoreStoresObject = {
+    stores: StoreStore[]
+}
+
+
+export type StoreStore = {
+    storeId: number,
+    storeName: string
+}
+
 export type StoreProductLineResponse = {
     ack: string,
     data: StoreProductLineObject
