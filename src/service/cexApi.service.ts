@@ -2,8 +2,8 @@ import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { CexApiQueryModel, CexGameHit, CexProductLine, CexProductLineResponseModel, CexQueryResponseModel } from '../model/cexApiModel.js';
 import axios from 'axios';
 import { DatabaseService } from './database.service.js';
-import { getRequiredEnvVar } from '../common/getRequiredEnvVar.js';
 import { GameStore, GameStoreGame, GameStoreResponse } from '../model/gameStore.js';
+import { getRequiredEnvVar } from '../common/getRequiredEnvVar.js';
 
 @Injectable()
 export class CexApiService {
@@ -30,7 +30,7 @@ export class CexApiService {
       a.localeCompare(b)
     );
 
-    const url = getRequiredEnvVar('CEX_QUERY_URL')
+    const url = getRequiredEnvVar('QUERY_URL')
     const productLines = await this.getProductLines()
     let storeData = []
 
@@ -40,7 +40,7 @@ export class CexApiService {
           axios.post<CexQueryResponseModel>(url, this.buildQueryParameters(store, categories))
         )
       )
-      
+
       storeData = results.map((result, index) =>
         this.buildStoreObjFromGames(
           result.data.hits,
@@ -60,7 +60,7 @@ export class CexApiService {
     if (superCatIds.length === 0)
       superCatIds = [1]
 
-    const url = getRequiredEnvVar('CEX_CATEGORY_URL')
+    const url = getRequiredEnvVar('CATEGORY_URL')
 
     try {
       const response = await axios.get<CexProductLineResponseModel>(`${url}/productlines`, {

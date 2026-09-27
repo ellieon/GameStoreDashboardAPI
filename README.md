@@ -1,15 +1,26 @@
 # GameStoreDashboardAPI
  
-## Running locally
- 
-npm install
-
-npm run start
+## Running locally for development
+Follow these steps to get the application up and running:
+* Create a file named `.env` at the root of the project and input the variables from the environment variables section into it
+* Run `npm install` 
+* Run `docker-compose up`
+* Run `npm run db:create`
+* Run `npm run start`
  
 ## Environment variables
  
-PORT=
+The following environment variables will need to be specified in a .env file in the root of the project
 
-CEX_QUERY_URL=
+`PORT` The port the api will bind to
+`QUERY_URL` The base url for the query API of the game store
+`CATEGORY_URL` The base url for the category API of the game store
+`DATABASE_URL` The database connection string for the PostgreSQL server that this server will use
+  * If using the docker compose file, the default string `DATABASE_URL=postgresql://manager:password@localhost:5432/manager` will work
+`ADMIN_NAME` The username for the initial admin account
+`ADMIN_EMAIL` The email for the initial admin account 
+`API_SECRET` Secret that will be used to salt api keys before hashing 
+`INITIAL_ADMIN_API_KEY` The initial API key that will be seeded into the database
 
-CEX_CATEGORY_URL=
+## Getting the admin API key for making calls
+* Go to adminer `http://localhost:8080`, find the record created in the user_keys table and add the `api_key` column there can be used for all api calls

@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/app.module.js';
-import { getRequiredEnvVar } from './common/getRequiredEnvVar.js';
 import { ValidationPipe } from '@nestjs/common';
+import { getRequiredEnvVar } from './common/getRequiredEnvVar.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
