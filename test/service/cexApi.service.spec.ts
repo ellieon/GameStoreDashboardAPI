@@ -34,13 +34,14 @@ describe('CexApiService', () => {
 
         service = module.get(CexApiService);
 
-        process.env.CEX_QUERY_URL = 'test-query';
-        process.env.CEX_CATEGORY_URL = 'test-category';
+        process.env.QUERY_URL = 'test-query';
+        process.env.CATEGORY_URL = 'test-category';
     });
 
     describe('getProductLines', async () => {
         it('should return product lines', async () => {
-            vi.mocked(axios.get).mockResolvedValue({
+            const spy = vi.spyOn(axios, 'get')
+            spy.mockResolvedValue({
                 data: {
                     response: {
                         data: {
@@ -64,12 +65,12 @@ describe('CexApiService', () => {
                 },
             ]);
 
-            expect(axios.get).toHaveBeenCalledOnce()
+            expect(spy).toHaveBeenCalledOnce()
         });
 
         it('when the cex api is down, throw a ServiceUnavailableError', async () => {
-            vi.mocked(axios.get).mockRejectedValue({});
-
+            const spy = vi.spyOn(axios, 'get')
+            spy.mockRejectedValue({});
             await expect(service.getProductLines()).rejects.toThrow(ServiceUnavailableException)
         })
     })
@@ -79,7 +80,10 @@ describe('CexApiService', () => {
             mockDatabaseService.getStoresForUser.mockReturnValue(['Acocks Green']);
             mockDatabaseService.getCategoriesForUser.mockReturnValue(['67', '59']);
 
-            vi.spyOn(service, 'getProductLines').mockResolvedValue([
+            const getProductLineSpy = vi.spyOn(service, 'getProductLines')
+            const axiosPostSpy = vi.spyOn(axios, 'post')
+
+            getProductLineSpy.mockResolvedValue([
                 {
                     productLineId: 59,
                     productLineName: 'Nintendo DS',
@@ -90,7 +94,7 @@ describe('CexApiService', () => {
                 } as CexProductLine,
             ]);
 
-            vi.mocked(axios.post).mockResolvedValue({
+            axiosPostSpy.mockResolvedValue({
                 data: sampleResponseAcocks,
             });
 
@@ -144,7 +148,10 @@ describe('CexApiService', () => {
             mockDatabaseService.getStoresForUser.mockReturnValue(['Acocks Green', 'Aberdeen']);
             mockDatabaseService.getCategoriesForUser.mockReturnValue(['67', '59']);
 
-            vi.spyOn(service, 'getProductLines').mockResolvedValue([
+            const productLinesSpy = vi.spyOn(service, 'getProductLines')
+            const axiosPostSpy = vi.spyOn(axios, 'post')
+
+            productLinesSpy.mockResolvedValue([
                 {
                     productLineId: 59,
                     productLineName: 'Nintendo DS',
@@ -155,7 +162,7 @@ describe('CexApiService', () => {
                 } as any,
             ]);
 
-            vi.mocked(axios.post).mockImplementationOnce(() => {
+            axiosPostSpy.mockImplementationOnce(() => {
                 return {
                     data: sampleResponseAberdeen
                 } as any
@@ -243,7 +250,10 @@ describe('CexApiService', () => {
             mockDatabaseService.getStoresForUser.mockReturnValue(['Acocks Green']);
             mockDatabaseService.getCategoriesForUser.mockReturnValue(['67', '59']);
 
-            vi.spyOn(service, 'getProductLines').mockResolvedValue([
+            const productLinesSpy = vi.spyOn(service, 'getProductLines')
+            const axiosPostSpy = vi.spyOn(axios, 'post')
+
+            productLinesSpy.mockResolvedValue([
                 {
                     productLineId: 59,
                     productLineName: 'Nintendo DS',
@@ -254,7 +264,7 @@ describe('CexApiService', () => {
                 } as CexProductLine,
             ]);
 
-            vi.mocked(axios.post).mockRejectedValue({});
+            axiosPostSpy.mockRejectedValue({});
 
             await expect(service.getListOfGamesForUser()).rejects.toThrow(ServiceUnavailableException)
 
