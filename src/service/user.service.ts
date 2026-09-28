@@ -1,13 +1,16 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 
 import { DatabaseService } from "./database.service.js";
-import { User, UserPreferences } from "../model/user.js";
+import { CreateUserRequestDTO, User, UserCreatedResponse, UserPreferences } from "../model/user.js";
 import { StoreApiService } from "./storeApi.service.js";
+import { AuthService } from "./auth.service.js";
 
 @Injectable()
 export class UserService {
-    constructor(private readonly databaseService: DatabaseService,
-        private readonly storeService: StoreApiService
+    constructor(
+        private readonly databaseService: DatabaseService,
+        private readonly storeService: StoreApiService,
+        private readonly authService: AuthService
     ) {
     }
 
@@ -29,6 +32,13 @@ export class UserService {
         }
 
         return res
+    }
+
+    public async createUser(createUserRequest: CreateUserRequestDTO): Promise<UserCreatedResponse> {
+        const apiKey = this.authService.generateToken();
+        const existingUser = await this.databaseService.getUserWithName(createUserRequest.name)
+        if(existingUser) throw new BadRequestException('User with name already exists')
+        return await this.databaseService.createNewUser(createUserRequest, apiKey)
     }
 
     private async validateData(stores: string[], categories: string[]){

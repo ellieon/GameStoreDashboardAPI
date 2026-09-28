@@ -1,13 +1,12 @@
-import { Injectable, OnModuleDestroy } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, OnModuleDestroy } from "@nestjs/common";
 import { getRequiredEnvVar } from "../common/getRequiredEnvVar.js";
 import { Pool } from 'pg'
-import { User, UserPreferences } from "../model/user.js";
+import { CreateUserRequestDTO, GeneratedAPIKey, User, UserCreatedResponse, UserPreferences } from "../model/user.js";
 import { GameStoreResponse } from "../model/gameStore.js";
 import { StateMetadata, StateMetadataResponse } from "../model/delta.js";
 
 @Injectable()
 export class DatabaseService implements OnModuleDestroy {
-
     private pool: Pool
     
     constructor(){
@@ -45,7 +44,7 @@ export class DatabaseService implements OnModuleDestroy {
     }
 
     public async getUserWithApiKey(hashedApiKey: string): Promise<User | undefined> {
-        const res = await this.pool.query('SELECT * FROM users JOIN user_keys ON users.id = user_keys.user_id and api_key_hash = $1 WHERE user_keys.active = true', [hashedApiKey])
+        const res = await this.pool.query('SELECT users.id, name, email, permissions FROM users JOIN user_keys ON users.id = user_keys.user_id and api_key_hash = $1 WHERE user_keys.active = true', [hashedApiKey])
 
         if (res.rowCount === 1) {
             return {
@@ -60,7 +59,7 @@ export class DatabaseService implements OnModuleDestroy {
     }
 
     public async getUserWithId(userId: number): Promise<User | undefined> {
-         const res = await this.pool.query('SELECT * FROM users JOIN user_keys ON users.id = user_keys.user_id and users.id = $1 WHERE user_keys.active = true', [userId])
+         const res = await this.pool.query('SELECT users.id, name, email, permissions FROM users JOIN user_keys ON users.id = user_keys.user_id and users.id = $1 WHERE user_keys.active = true', [userId])
 
         if (res.rowCount === 1) {
             return {
@@ -135,6 +134,58 @@ export class DatabaseService implements OnModuleDestroy {
                 permissions: row.permissions
             }
         }) as User[]
+    }
+
+    public async createNewUser(createUserRequest: CreateUserRequestDTO, apiKey: GeneratedAPIKey): Promise<UserCreatedResponse> {
+        const client = await this.pool.connect()
+        let userId = 0
+        try{
+            await client.query('BEGIN')
+            const res = await client.query('INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id',
+                [createUserRequest.name, createUserRequest.email])
+            if (!res.rowCount || res.rowCount === 0){
+                throw new InternalServerErrorException('Unable to create user')
+            }
+
+            userId = res.rows[0].id
+            await client.query('INSERT INTO user_keys (user_id, api_key_hash, permissions, active) VALUES ($1, $2, $3, $4)', 
+                [userId, apiKey.hashedKey, JSON.stringify([createUserRequest.permissions]), 'true'])
+
+
+            await client.query('INSERT INTO user_prefs (stores, categories, user_id) VALUES ($1, $2, $3)', 
+                [JSON.stringify(createUserRequest.preferences.stores), JSON.stringify(createUserRequest.preferences.categories), userId])
+            await client.query('COMMIT')
+        } catch {
+            await client.query('ROLLBACK')
+            throw new InternalServerErrorException('Unable to create new user')
+        } finally {
+            await client.release()
+        }
+
+        return {
+            apiKey: apiKey.key,
+            user: {
+                id: userId,
+                name: createUserRequest.name,
+                email: createUserRequest.email,
+                permissions: [createUserRequest.permissions]
+            }
+        }
+    }
+
+    public async getUserWithName(name: string): Promise<User | undefined> {
+        const res = await this.pool.query('SELECT * FROM users JOIN user_keys ON users.id = user_keys.user_id WHERE name = $1 AND user_keys.active = true', [name])
+
+        if(res.rowCount && res.rowCount > 0) {
+            return {
+                name: res.rows[0].name,
+                email: res.rows[0].email,
+                id: res.rows[0].id,
+                permissions: res.rows[0].permissions
+            }
+        }
+
+        return undefined
     }
 }
 

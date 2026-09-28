@@ -11,7 +11,7 @@ export class FetchService {
         private readonly deltaService: DeltaService
     ) {}
 
-    @Cron(CronExpression.EVERY_MINUTE)
+    @Cron(CronExpression.EVERY_DAY_AT_1AM)
     public async fetchStoreStatesForAllUsers() {
         console.log("Fetching store states for every user")
         const users = await this.databaseService.getListOfActivesUsers()
