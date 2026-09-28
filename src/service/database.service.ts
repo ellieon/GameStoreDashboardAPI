@@ -30,7 +30,8 @@ export class DatabaseService implements OnModuleDestroy {
     }
 
     public async updatePreferencesForUser(user: User, stores: string[], categories: string[]): Promise<UserPreferences | undefined> {
-        const query: string = `UPDATE user_prefs SET stores = $1, categories = $2 WHERE user_id = $3`
+        const query: string = 'INSERT INTO user_prefs (stores, categories, user_id) VALUES ($1, $2, $3) ON CONFLICT (user_id) DO UPDATE SET stores = $1, categories = $2'
+
         const res = await this.pool.query(query, [JSON.stringify(stores), JSON.stringify(categories), user.id])
 
         if(res.rowCount === 0 )

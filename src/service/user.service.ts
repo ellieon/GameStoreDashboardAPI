@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 
 import { DatabaseService } from "./database.service.js";
 import { User, UserPreferences } from "../model/user.js";
@@ -16,7 +16,7 @@ export class UserService {
         const res = await this.databaseService.updatePreferencesForUser(user, stores, categories)
         
         if(!res){
-            throw new NotFoundException('User not found in preferences database')
+            throw new InternalServerErrorException('User not updated')
         }
         return res
     }
