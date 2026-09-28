@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, Put, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Header, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from '../service/user.service.js';
 import { Role, UserPreferencesRequestDTO } from '../model/user.js';
 import { Roles } from '../guard/roles.decorator.js';

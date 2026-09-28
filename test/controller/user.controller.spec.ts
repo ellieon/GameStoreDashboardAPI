@@ -38,10 +38,6 @@ describe('UserController', () => {
       permissions: []
     }
 
-    const req: any = {
-      user: user
-    }
-
     const result = await controller.putPreferencesForCurrentUser(user);
 
     expect(result).toEqual({
