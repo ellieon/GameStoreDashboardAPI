@@ -6,9 +6,9 @@
             "boxName": "Sonic Rush",
             "outOfStock": [],  
             "imageUrls": {
-                "large": "https://uk.static.webuy.com/product_images/Gaming/DS Software/5060004765928_l.jpg",
-                "small": "https://uk.static.webuy.com/product_images/Gaming/DS Software/5060004765928_s.jpg",
-                "medium": "https://uk.static.webuy.com/product_images/Gaming/DS Software/5060004765928_m.jpg",
+                "large": "5060004765928_l.jpg",
+                "small": "060004765928_s.jpg",
+                "medium": "060004765928_m.jpg",
                 "masterBoxLarge": null,
                 "masterBoxSmall": null,
                 "masterBoxMedium": null
@@ -38,9 +38,9 @@
             "boxName": "Lost Kingdoms II, + Manual, Boxed",
             "outOfStock": [],
             "imageUrls": {
-                "large": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS194B_l.jpg",
-                "small": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS194B_s.jpg",
-                "medium": "https://uk.static.webuy.com/product_images/Gaming/GameCube Rarities/SLEGGCS194B_m.jpg",
+                "large": "SLEGGCS194B_l.jpg",
+                "small": "LEGGCS194B_s.jpg",
+                "medium": "SLEGGCS194B_m.jpg",
                 "masterBoxLarge": null,
                 "masterBoxSmall": null,
                 "masterBoxMedium": null

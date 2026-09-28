@@ -2,21 +2,28 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
 import axios from 'axios';
 
-import { CexApiService } from '../../src/service/cexApi.service.js';
+import { StoreApiService } from '../../src/service/storeApi.service.js';
 import { DatabaseService } from '../../src/service/database.service.js';
-import * as sampleResponseAcocks from '../data/cex-api-sample-query-acocks-gc-ds.json' with { type: 'json' };
-import * as sampleResponseAberdeen from '../data/cex-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
-import { CexProductLine, CexProductLineResponseModel } from '../../src/model/cexApiModel.js';
+import * as sampleResponseAcocks from '../data/store-api-sample-query-acocks-gc-ds.json' with { type: 'json' };
+import * as sampleResponseAberdeen from '../data/store-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
+import { StoreProductLine, StoreProductLineResponseModel, StoreStoresResponseModel } from '../../src/model/store.js';
 import { ServiceUnavailableException } from '@nestjs/common';
+import { User } from '../../src/model/user.js';
 
 vi.mock('axios');
 
-describe('CexApiService', () => {
-    let service: CexApiService;
+describe('StoreApiService', () => {
+    let service: StoreApiService;
+
+    const user: User = {
+        id: 1,
+        name: '',
+        email: '',
+        permissions: []
+    }
 
     const mockDatabaseService = {
-        getStoresForUser: vi.fn(),
-        getCategoriesForUser: vi.fn(),
+        getPreferencesForUser: vi.fn()
     };
 
     beforeEach(async () => {
@@ -24,7 +31,7 @@ describe('CexApiService', () => {
 
         const module: TestingModule = await Test.createTestingModule({
             providers: [
-                CexApiService,
+                StoreApiService,
                 {
                     provide: DatabaseService,
                     useValue: mockDatabaseService,
@@ -32,7 +39,7 @@ describe('CexApiService', () => {
             ],
         }).compile();
 
-        service = module.get(CexApiService);
+        service = module.get(StoreApiService);
 
         process.env.QUERY_URL = 'test-query';
         process.env.CATEGORY_URL = 'test-category';
@@ -53,7 +60,7 @@ describe('CexApiService', () => {
                             ],
                         },
                     },
-                } as CexProductLineResponseModel
+                } as StoreProductLineResponseModel
             });
 
             const result = await service.getProductLines(1);
@@ -68,7 +75,7 @@ describe('CexApiService', () => {
             expect(spy).toHaveBeenCalledOnce()
         });
 
-        it('when the cex api is down, throw a ServiceUnavailableError', async () => {
+        it('when the store api is down, throw a ServiceUnavailableError', async () => {
             const spy = vi.spyOn(axios, 'get')
             spy.mockRejectedValue({});
             await expect(service.getProductLines()).rejects.toThrow(ServiceUnavailableException)
@@ -77,8 +84,10 @@ describe('CexApiService', () => {
 
     describe('getListOfGamesForUser()', async () => {
         it('When the user has selected a single store and multiple catagories, should build a response containing everything that matches', async () => {
-            mockDatabaseService.getStoresForUser.mockReturnValue(['Acocks Green']);
-            mockDatabaseService.getCategoriesForUser.mockReturnValue(['67', '59']);
+            mockDatabaseService.getPreferencesForUser.mockReturnValue({
+                categories: ['67', '59'],
+                stores: ['Acocks Green']
+            })
 
             const getProductLineSpy = vi.spyOn(service, 'getProductLines')
             const axiosPostSpy = vi.spyOn(axios, 'post')
@@ -87,18 +96,18 @@ describe('CexApiService', () => {
                 {
                     productLineId: 59,
                     productLineName: 'Nintendo DS',
-                } as CexProductLine,
+                } as StoreProductLine,
                 {
                     productLineId: 67,
                     productLineName: 'Nintendo Gamecube',
-                } as CexProductLine,
+                } as StoreProductLine,
             ]);
 
             axiosPostSpy.mockResolvedValue({
                 data: sampleResponseAcocks,
             });
 
-            const result = await service.getListOfGamesForUser();
+            const result = await service.getListOfGamesForUser(user);
 
             expect(result).toMatchObject({
                 stores: [
@@ -145,8 +154,11 @@ describe('CexApiService', () => {
         });
 
         it('When the user has selected multiple stores and multiple catagories, should build a combined response containing everything that matches', async () => {
-            mockDatabaseService.getStoresForUser.mockReturnValue(['Acocks Green', 'Aberdeen']);
-            mockDatabaseService.getCategoriesForUser.mockReturnValue(['67', '59']);
+
+            mockDatabaseService.getPreferencesForUser.mockReturnValue({
+                categories: ['67', '59'],
+                stores: ['Acocks Green', 'Aberdeen']
+            })
 
             const productLinesSpy = vi.spyOn(service, 'getProductLines')
             const axiosPostSpy = vi.spyOn(axios, 'post')
@@ -172,7 +184,7 @@ describe('CexApiService', () => {
                 } as any
             });
 
-            const result = await service.getListOfGamesForUser();
+            const result = await service.getListOfGamesForUser(user);
 
             expect(result).toMatchObject({
                 stores: [
@@ -246,9 +258,11 @@ describe('CexApiService', () => {
             });
         });
 
-        it('When the cex api is down a ServiceUnavailableError should be thrown', async () => {
-            mockDatabaseService.getStoresForUser.mockReturnValue(['Acocks Green']);
-            mockDatabaseService.getCategoriesForUser.mockReturnValue(['67', '59']);
+        it('When the store api is down a ServiceUnavailableError should be thrown', async () => {
+            mockDatabaseService.getPreferencesForUser.mockReturnValue({
+                categories: ['67', '59'],
+                stores: ['Acocks Green']
+            })
 
             const productLinesSpy = vi.spyOn(service, 'getProductLines')
             const axiosPostSpy = vi.spyOn(axios, 'post')
@@ -257,18 +271,62 @@ describe('CexApiService', () => {
                 {
                     productLineId: 59,
                     productLineName: 'Nintendo DS',
-                } as CexProductLine,
+                } as StoreProductLine,
                 {
                     productLineId: 67,
                     productLineName: 'Nintendo Gamecube',
-                } as CexProductLine,
+                } as StoreProductLine,
             ]);
 
             axiosPostSpy.mockRejectedValue({});
 
-            await expect(service.getListOfGamesForUser()).rejects.toThrow(ServiceUnavailableException)
+            await expect(service.getListOfGamesForUser(user)).rejects.toThrow(ServiceUnavailableException)
 
         })
     })
 
+    describe('getStores', async () => {
+        it('Should return a list of stores on a successful connection to the store API ', async () => {
+            const spy = vi.spyOn(axios, 'get')
+            spy.mockResolvedValue({
+                data: {
+                    response: {
+                        data: {
+                            stores: [
+                                {
+                                    storeId: 1,
+                                    storeName: 'TestName',
+                                },
+                                {
+                                    storeId: 2,
+                                    storeName: 'TestName2',
+                                },
+                            ],
+                        },
+                    },
+                } as StoreStoresResponseModel
+            });
+
+            const result = await service.getStores();
+
+            expect(result).toEqual([
+                {
+                    storeId: 1,
+                    storeName: 'TestName',
+                },
+                {
+                    storeId: 2,
+                    storeName: 'TestName2',
+                },
+            ]);
+
+            expect(spy).toHaveBeenCalledOnce()
+        })
+
+        it('Should throw a ServiceUnavailableException when the store API is unavailable ', async () => {
+            const spy = vi.spyOn(axios, 'get')
+            spy.mockRejectedValue({});
+            await expect(service.getStores()).rejects.toThrow(ServiceUnavailableException)
+        })
+    })
 });

@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
 
-import { CexController } from '../../src/controller/cex.controller.js';
-import { CexApiService } from '../../src/service/cexApi.service.js';
+import { StoreController } from '../../src/controller/store.controller.js';
+import { StoreApiService } from '../../src/service/storeApi.service.js';
+import { User } from '../../src/model/user.js';
 
-describe('CexController', () => {
-  let controller: CexController;
+describe('StoreController', () => {
+  let controller: StoreController;
 
   const mockService = {
     getListOfGamesForUser: vi.fn(),
@@ -14,16 +15,16 @@ describe('CexController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [CexController],
+      controllers: [StoreController],
       providers: [
         {
-          provide: CexApiService,
+          provide: StoreApiService,
           useValue: mockService,
         },
       ],
     }).compile();
 
-    controller = module.get(CexController);
+    controller = module.get(StoreController);
   });
 
   it('should return games', async () => {
@@ -31,7 +32,14 @@ describe('CexController', () => {
       stores: [],
     });
 
-    const result = await controller.getGames();
+    const user: User = {
+      id: 0,
+      name: '',
+      email: '',
+      permissions: []
+    }
+
+    const result = await controller.getGames(user);
 
     expect(result).toEqual({
       stores: [],
@@ -48,7 +56,7 @@ describe('CexController', () => {
     const result = await controller.getProductLines([1]);
 
     expect(result).toEqual(
-      { 
+      {
         productLines: [
           {
             productLineId: 1,

@@ -1,32 +1,31 @@
-import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { CexApiQueryModel, CexGameHit, CexProductLine, CexProductLineResponseModel, CexQueryResponseModel } from '../model/cexApiModel.js';
+import { BadRequestException, Injectable, ServiceUnavailableException } from '@nestjs/common';
+import { StoreApiQueryModel, StoreGameHit, StoreProductLine, StoreProductLineResponseModel, StoreQueryResponseModel, StoreStoresResponseModel, StoreStore } from '../model/store.js';
 import axios from 'axios';
 import { DatabaseService } from './database.service.js';
 import { GameStore, GameStoreGame, GameStoreResponse } from '../model/gameStore.js';
 import { getRequiredEnvVar } from '../common/getRequiredEnvVar.js';
+import { User } from '../model/user.js';
 
 @Injectable()
-export class CexApiService {
+export class StoreApiService {
 
-  private static readonly DEFAULT_PRODUCT_LINES: number[] = [
-    1, //Gaming
-    4, //Phones
-    3, //Computing
-    5, //Electronics
-    2, // Film
-    9, // New Accessories
-    10 // Apparel
-  ]
   constructor(
     private databaseService: DatabaseService
   ) { }
 
-  public async getListOfGamesForUser(): Promise<GameStoreResponse> {
-    const stores = this.databaseService.getStoresForUser().sort((a, b) =>
+  public async getListOfGamesForUser(user: User): Promise<GameStoreResponse> {
+
+    const preferences = await this.databaseService.getPreferencesForUser(user)
+
+    if(!preferences) {
+        throw new BadRequestException('Preferences for user not set')
+    }
+
+    const stores = preferences.stores.sort((a, b) =>
       a.localeCompare(b)
     );
 
-    const categories = this.databaseService.getCategoriesForUser().sort((a, b) =>
+    const categories =  preferences.categories.sort((a, b) =>
       a.localeCompare(b)
     );
 
@@ -37,7 +36,7 @@ export class CexApiService {
     try {
       const results = await Promise.all(
         stores.map(store =>
-          axios.post<CexQueryResponseModel>(url, this.buildQueryParameters(store, categories))
+          axios.post<StoreQueryResponseModel>(url, this.buildQueryParameters(store, categories))
         )
       )
 
@@ -51,36 +50,47 @@ export class CexApiService {
       )
 
       return { stores: storeData }
-    } catch (error) {
-      throw new ServiceUnavailableException(error, 'Unable to connect to CeX endpoint')
+    } catch {
+      throw new ServiceUnavailableException('Unable to connect to store endpoint')
     }
   }
 
-  public async getProductLines(...superCatIds: number[]): Promise<CexProductLine[]> {
+  public async getProductLines(...superCatIds: number[]): Promise<StoreProductLine[]> {
     if (superCatIds.length === 0)
       superCatIds = [1]
 
     const url = getRequiredEnvVar('CATEGORY_URL')
 
     try {
-      const response = await axios.get<CexProductLineResponseModel>(`${url}/productlines`, {
+      const response = await axios.get<StoreProductLineResponseModel>(`${url}/productlines`, {
         params: {
           superCatIds: JSON.stringify(superCatIds)
         }
       })
       return response.data.response.data.productLines
-    } catch (error) {
-      throw new ServiceUnavailableException(error, 'Unable to connect to CeX endpoint')
+    } catch {
+      throw new ServiceUnavailableException('Unable to connect to store endpoint')
     }
 
   }
 
-  private buildStoreObjFromGames(inputData: CexGameHit[], store: string, categories: string[], productLines: CexProductLine[]): GameStore {
+  public async getStores(): Promise<StoreStore[]> {
+     const url = getRequiredEnvVar('CATEGORY_URL')
+
+    try {
+      const response = await axios.get<StoreStoresResponseModel>(`${url}/stores`)
+      
+      return response.data.response.data.stores
+    } catch {
+      throw new ServiceUnavailableException('Unable to connect to store endpoint')
+    }
+  }
+
+  private buildStoreObjFromGames(inputData: StoreGameHit[], store: string, categories: string[], productLines: StoreProductLine[]): GameStore {
     let ids: string[] = []
 
     const storeObj: GameStore = {
       name: store,
-      availableBoxIds: ids,
       categories: categories.map(category => {
         const productLine = productLines.find(productLine => {
           return String(productLine.productLineId) === category
@@ -90,7 +100,8 @@ export class CexApiService {
           name: productLine?.productLineName,
           games: []
         }
-      })
+      }),
+      availableBoxIds: ids
     }
 
     const sortedData = inputData.sort((a, b) =>
@@ -118,7 +129,7 @@ export class CexApiService {
     return storeObj;
   }
 
-  private buildQueryParameters(store: string, categories: string[]): CexApiQueryModel {
+  private buildQueryParameters(store: string, categories: string[]): StoreApiQueryModel {
     return {
       attributesToRetrieve: ['boxName', 'sellPrice', 'productLineId', 'outOfStock', 'boxId'],
       facetFilters: [`stores: ${store}`],

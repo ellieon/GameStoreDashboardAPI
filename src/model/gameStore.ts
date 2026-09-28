@@ -11,8 +11,8 @@ export type GameStoreCategory = {
 
 export type GameStore = {
     name: string,
+    categories: GameStoreCategory[],
     availableBoxIds: string[]
-    categories: GameStoreCategory[]
 }
 
 export type GameStoreResponse = {
