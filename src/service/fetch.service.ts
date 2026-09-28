@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { User } from "../model/user.js";
 import { DatabaseService } from "./database.service.js";
 import { DeltaService } from "./delta.service.js";
@@ -15,7 +15,8 @@ export class FetchService {
     public async fetchStoreStatesForAllUsers() {
         console.log("Fetching store states for every user")
         const users = await this.databaseService.getListOfActivesUsers()
-        this.processUsersInBatches(users)
+        await this.processUsersInBatches(users)
+        console.log("Fetching store users done")
     }
 
     private async processUsersInBatches(users: User[], batchSize = 5) {
