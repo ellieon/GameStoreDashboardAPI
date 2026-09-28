@@ -1,5 +1,4 @@
-import { Controller, Get, Header, ParseArrayPipe, Query } from '@nestjs/common';
-import { GameStoreProductLineResponse, GameStoreResponse } from '../model/gameStore.js';
+import { Controller, Get, Header, Query } from '@nestjs/common';
 import { Roles } from '../guard/roles.decorator.js';
 import { Role, User } from '../model/user.js';
 import { CurrentUser } from '../guard/currentUser.decorator.js';
