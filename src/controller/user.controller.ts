@@ -19,9 +19,10 @@ export class UserController {
   }
 
   @Get('/preferences')
+  @Roles(Role.Admin, Role.User)
   @Header('Content-Type', 'application/json')
-  async getPreferencesForCurrentUser(@Req() request: Request): Promise<UserPreferencesRequestDTO> {
-    const res = await this.userService.getPreferencesForUser((request as any).user);
+  async putPreferencesForCurrentUser(@CurrentUser() user: User): Promise<UserPreferencesRequestDTO> {
+    const res = await this.userService.getPreferencesForUser(user);
     return res
   }
 

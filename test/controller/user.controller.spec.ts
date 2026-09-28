@@ -42,7 +42,7 @@ describe('UserController', () => {
       user: user
     }
 
-    const result = await controller.getPreferencesForCurrentUser(req as Request);
+    const result = await controller.putPreferencesForCurrentUser(user);
 
     expect(result).toEqual({
       stores: [],
@@ -62,11 +62,7 @@ describe('UserController', () => {
       permissions: []
     }
 
-    const req: any = {
-      user: user
-    }
-
-    const result = await controller.updatePreferencesForCurrentUser(req as Request, {stores:[], categories:[]});
+    const result = await controller.updatePreferencesForCurrentUser(user, {stores:[], categories:[]});
 
     expect(result).toEqual({
       stores: [],

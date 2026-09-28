@@ -38,11 +38,8 @@ describe('StoreController', () => {
       email: '',
       permissions: []
     }
-    const req: any = {
-      user: user
-    }
 
-    const result = await controller.getGames(req as Request);
+    const result = await controller.getGames(user);
 
     expect(result).toEqual({
       stores: [],

@@ -5,6 +5,7 @@ import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../../src/modules/app.module.js';
 import { DatabaseService } from '../../src/service/database.service.js';
 import { MockStoreServer } from './helper/mock-store-server.js';
+import { Role } from '../../src/model/user.js';
 
 let app: INestApplication;
 let mockDatabaseService: Partial<DatabaseService>
@@ -69,7 +70,7 @@ describe('StoreController', async () => {
             mockDatabaseService.getUserWithApiKey = vi.fn().mockResolvedValue({
                 name: 'test',
                 email: 'test',
-                permissions: [],
+                permissions: [Role.Admin, Role.User],
                 id: 1
             })
 
@@ -89,7 +90,7 @@ describe('StoreController', async () => {
     describe('/product-lines', () => {
         it('should return a 401 not authorised when no api key is provided', async () => {
             const response = await request(app.getHttpServer())
-                .get('/store/g')
+                .get('/store/games')
             expect(response.statusCode).toBe(401)
             expect(response.body.message).toBe('Missing API Token')
 
@@ -107,7 +108,7 @@ describe('StoreController', async () => {
             mockDatabaseService.getUserWithApiKey = vi.fn().mockResolvedValue({
                 name: 'test',
                 email: 'test',
-                permissions: [],
+                permissions: [Role.Admin, Role.User],
                 id: 1
             })
 
