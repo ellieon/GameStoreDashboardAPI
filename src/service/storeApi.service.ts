@@ -57,7 +57,7 @@ export class StoreApiService {
 
   public async getProductLines(...superCatIds: number[]): Promise<StoreProductLine[]> {
     if (superCatIds.length === 0)
-      superCatIds = [1]
+      superCatIds = [1,2,3,4,5,6,7,8,9,10]
 
     const url = getRequiredEnvVar('CATEGORY_URL')
 
