@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, OnModuleDestroy } from "@nestjs/common";
 import { getRequiredEnvVar } from "../common/getRequiredEnvVar.js";
 import { Pool } from 'pg'
 import { User, UserPreferences } from "../model/user.js";
 
 @Injectable()
-export class DatabaseService {
+export class DatabaseService implements OnModuleDestroy {
 
     private pool: Pool
     
@@ -12,9 +12,13 @@ export class DatabaseService {
         this.pool = new Pool({connectionString: getRequiredEnvVar('DATABASE_URL')})
     }
 
+    async onModuleDestroy() {
+        await this.pool.end()
+    }
+
     public async getPreferencesForUser(user: User): Promise<UserPreferences | undefined> {
         const res = await this.pool.query('SELECT * FROM users JOIN user_prefs ON users.id = user_prefs.user_id WHERE user_prefs.user_id = $1', [user.id])
-        if(res.rowCount === 1) {
+        if(res.rows.length > 0) {
             return {
                 stores: res.rows[0].stores,
                 categories: res.rows[0].categories

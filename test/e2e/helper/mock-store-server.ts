@@ -18,17 +18,14 @@ export class MockStoreServer {
 
     private setupRoutes(): void {
         this.app.post('/', (_req: Request, res: Response) => {
-            
             res.json(sampleResponseAberdeen);
         });
 
         this.app.get('/productlines', (_req: Request, res: Response) => {
-
             res.json(sampleResponseProductLines);
         });
 
         this.app.get('/stores', (_req: Request, res: Response) => {
-
             res.json(sampleResponseStores);
         });
     }

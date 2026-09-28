@@ -1,10 +1,10 @@
-import { IsNotEmpty, IsString } from "class-validator"
+import { ArrayNotEmpty, IsArray, IsNotEmpty, IsString } from "class-validator"
 
-export type User = {
-    id: number,
-    name: string,
-    email: string,
-    permissions: string[]
+export class User  {
+    id: number
+    name: string
+    email: string
+    permissions: Role[]
 }
 
 export type UserPreferences = {
@@ -13,15 +13,22 @@ export type UserPreferences = {
 }
 
 export class UserPreferencesRequestDTO {
+    @IsArray()
+    @ArrayNotEmpty()
     @IsString({
         each: true
     })
-    @IsNotEmpty()
     stores: string[]
 
+    @IsArray()
+    @ArrayNotEmpty()
     @IsString({
         each: true
     })
-    @IsNotEmpty()
     categories: string[]
+}
+
+export enum Role {
+    Admin = 'admin',
+    User = 'user'
 }

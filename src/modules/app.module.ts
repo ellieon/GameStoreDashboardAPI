@@ -4,10 +4,10 @@ import { StoreApiService } from '../service/storeApi.service.js';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseService } from '../service/database.service.js';
 import { AuthService } from '../service/auth.service.js';
-import { AuthMiddleware } from '../middleware/auth.middleware.js';
 import { UserController } from '../controller/user.controller.js';
 import { UserService } from '../service/user.service.js';
-import { AdminMiddleware } from '../middleware/admin.middleware.js';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from '../guard/roles.guard.js';
 
 @Module({
   imports: [
@@ -16,17 +16,9 @@ import { AdminMiddleware } from '../middleware/admin.middleware.js';
         }),
     ],
   controllers: [StoreController, UserController],
-  providers: [StoreApiService, DatabaseService, AuthService, UserService],
+  providers: [StoreApiService, DatabaseService, AuthService, UserService,
+    { provide: APP_GUARD, useClass: RolesGuard }],
 })
 
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes('{*splat}');
-      
-    consumer
-      .apply(AdminMiddleware)
-      .forRoutes('/user/admin')
-  }
+export class AppModule{
 }

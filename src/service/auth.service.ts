@@ -16,7 +16,7 @@ export class AuthService {
         return this.generateApiKey()
     }
 
-    public async verifyToken(token: string): Promise<User | undefined> {
+    public async verifyToken(token: string): Promise<User> {
         const hashedKey = this.hashKeyWithSalt(token,this.apiSecret)
         const user = await this.databaseService.getUserWithApiKey(hashedKey)
 
