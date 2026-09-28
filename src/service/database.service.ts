@@ -123,5 +123,18 @@ export class DatabaseService implements OnModuleDestroy {
         return res.rows[0].state as GameStoreResponse
 
     }
+
+    public async getListOfActivesUsers(): Promise<User[]> {
+        const res = await this.pool.query('SELECT * FROM users JOIN user_keys ON users.id = user_keys.user_id WHERE user_keys.active = true')
+
+        return res.rows.map(row => {
+            return {
+                id: row.id,
+                name: row.name,
+                email: row.email,
+                permissions: row.permissions
+            }
+        }) as User[]
+    }
 }
 

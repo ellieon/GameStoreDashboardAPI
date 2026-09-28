@@ -21,3 +21,4 @@ The following environment variables will need to be specified in a .env file in 
 `ADMIN_EMAIL` The email for the initial admin account 
 `API_SECRET` Secret that will be used to salt api keys before hashing 
 `INITIAL_ADMIN_API_KEY` The initial API key that will be seeded into the database
+`ENABLE_SCHEDULER` Set this to true if you want to enable cron jobs to run on the fetch service
