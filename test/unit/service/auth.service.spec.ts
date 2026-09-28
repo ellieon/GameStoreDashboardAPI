@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
-import { DatabaseService } from '../../src/service/database.service.js';
+import { DatabaseService } from '../../../src/service/database.service.js';
 import { UnauthorizedException } from '@nestjs/common';
-import { User } from '../../src/model/user.js';
-import { AuthService } from '../../src/service/auth.service.js';
+import { User } from '../../../src/model/user.js';
+import { AuthService } from '../../../src/service/auth.service.js';
 
 vi.mock('axios');
 

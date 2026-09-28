@@ -8,6 +8,8 @@ import { UserController } from '../controller/user.controller.js';
 import { UserService } from '../service/user.service.js';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from '../guard/roles.guard.js';
+import { DeltaController } from '../controller/delta.controller.js';
+import { DeltaService } from '../service/delta.service.js';
 
 @Module({
   imports: [
@@ -15,8 +17,8 @@ import { RolesGuard } from '../guard/roles.guard.js';
             isGlobal: true,   
         }),
     ],
-  controllers: [StoreController, UserController],
-  providers: [StoreApiService, DatabaseService, AuthService, UserService,
+  controllers: [StoreController, UserController, DeltaController],
+  providers: [StoreApiService, DatabaseService, AuthService, UserService, DeltaService,
     { provide: APP_GUARD, useClass: RolesGuard }],
 })
 

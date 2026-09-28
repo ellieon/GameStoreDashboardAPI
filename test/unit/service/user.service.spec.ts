@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
-import { StoreApiService } from '../../src/service/storeApi.service.js';
-import { DatabaseService } from '../../src/service/database.service.js';
-import { StoreProductLine, StoreStore } from '../../src/model/store.js';
+import { StoreApiService } from '../../../src/service/storeApi.service.js';
+import { DatabaseService } from '../../../src/service/database.service.js';
+import { StoreProductLine, StoreStore } from '../../../src/model/store.js';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { User } from '../../src/model/user.js';
-import { UserService } from '../../src/service/user.service.js';
+import { User } from '../../../src/model/user.js';
+import { UserService } from '../../../src/service/user.service.js';
 
 vi.mock('axios');
 

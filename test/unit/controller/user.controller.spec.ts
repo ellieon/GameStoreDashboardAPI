@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
-import { User } from '../../src/model/user.js';
-import { UserController } from '../../src/controller/user.controller.js';
-import { UserService } from '../../src/service/user.service.js';
+import { User } from '../../../src/model/user.js';
+import { UserController } from '../../../src/controller/user.controller.js';
+import { UserService } from '../../../src/service/user.service.js';
 
 describe('UserController', () => {
   let controller: UserController;
