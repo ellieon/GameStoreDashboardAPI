@@ -2,13 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
 import axios from 'axios';
 
-import { StoreApiService } from '../../src/service/storeApi.service.js';
-import { DatabaseService } from '../../src/service/database.service.js';
-import * as sampleResponseAcocks from '../data/store-api-sample-query-acocks-gc-ds.json' with { type: 'json' };
-import * as sampleResponseAberdeen from '../data/store-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
-import { StoreProductLine, StoreProductLineResponseModel, StoreStoresResponseModel } from '../../src/model/store.js';
+import { StoreApiService } from '../../../src/service/storeApi.service.js';
+import { DatabaseService } from '../../../src/service/database.service.js';
+import * as sampleResponseAcocks from '../../data/store-api-sample-query-acocks-gc-ds.json' with { type: 'json' };
+import * as sampleResponseAberdeen from '../../data/store-api-sample-query-aberdeen-gc-ds.json' with { type: 'json' };
+import { StoreProductLine, StoreProductLineResponseModel, StoreStoresResponseModel } from '../../../src/model/store.js';
 import { ServiceUnavailableException } from '@nestjs/common';
-import { User } from '../../src/model/user.js';
+import { User } from '../../../src/model/user.js';
 
 vi.mock('axios');
 

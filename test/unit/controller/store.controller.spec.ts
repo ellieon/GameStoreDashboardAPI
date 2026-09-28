@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { describe, it, beforeEach, expect, vi } from 'vitest';
 
-import { StoreController } from '../../src/controller/store.controller.js';
-import { StoreApiService } from '../../src/service/storeApi.service.js';
-import { User } from '../../src/model/user.js';
+import { StoreController } from '../../../src/controller/store.controller.js';
+import { StoreApiService } from '../../../src/service/storeApi.service.js';
+import { User } from '../../../src/model/user.js';
 
 describe('StoreController', () => {
   let controller: StoreController;

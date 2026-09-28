@@ -2,6 +2,8 @@ import { Injectable, OnModuleDestroy } from "@nestjs/common";
 import { getRequiredEnvVar } from "../common/getRequiredEnvVar.js";
 import { Pool } from 'pg'
 import { User, UserPreferences } from "../model/user.js";
+import { GameStoreResponse } from "../model/gameStore.js";
+import { StateMetadata, StateMetadataResponse } from "../model/delta.js";
 
 @Injectable()
 export class DatabaseService implements OnModuleDestroy {
@@ -55,4 +57,70 @@ export class DatabaseService implements OnModuleDestroy {
 
         return undefined
     }
+
+    public async getUserWithId(userId: number): Promise<User | undefined> {
+         const res = await this.pool.query('SELECT * FROM users JOIN user_keys ON users.id = user_keys.user_id and users.id = $1 WHERE user_keys.active = true', [userId])
+
+        if (res.rowCount === 1) {
+            return {
+                id: res.rows[0].id,
+                name: res.rows[0].name,
+                email: res.rows[0].email,
+                permissions: res.rows[0].permissions
+            }
+        }
+
+        return undefined
+    }
+
+    public async storeStoreStateForUser(user: User, state: GameStoreResponse): Promise <StateMetadata | undefined> {
+        const query = 'INSERT INTO user_store_states (user_id, state, date_taken) VALUES ($1, $2, $3) RETURNING *'
+        const res = await this.pool.query(query, [user.id, JSON.stringify(state), new Date().toISOString()])
+        if (res.rowCount === 1) {
+            return { userId: res.rows[0].user_id, stateId: res.rows[0].id, date: res.rows[0].date_taken }
+        }
+
+        return undefined
+    }
+
+    public async getStoreStateMetadataForUser(user: User): Promise <StateMetadataResponse> {
+        const query = 'SELECT id, user_id, date_taken FROM user_store_states WHERE user_id = $1'
+        const res = await this.pool.query(query, [user.id])
+
+        const metadata: StateMetadata[] = []
+        res.rows.forEach(row => {
+            metadata.push({
+                userId: row.user_id,
+                stateId: row.id,
+                date: new Date(row.date_taken)
+            })
+        })
+
+        return { stateMetadata: metadata }
+    }
+
+    public async getStoreStateFromId(id: number, user: User): Promise <GameStoreResponse | undefined> {
+        const query = 'SELECT state FROM user_store_states WHERE id = $1 AND user_id = $2'
+        const res = await this.pool.query(query, [id, user.id])
+
+        if(res.rows.length === 0) {
+            return undefined
+        }
+
+        return res.rows[0].state as GameStoreResponse
+    }
+    
+    public async getStoreStateLatestForUser(user: User): Promise<GameStoreResponse | undefined> {
+        const query = 'SELECT state FROM user_store_states WHERE user_id = $1 ORDER BY date_taken DESC LIMIT 1'
+        const res = await this.pool.query(query, [user.id])
+
+
+        if(res.rows.length === 0) {
+            return undefined    
+        }
+
+        return res.rows[0].state as GameStoreResponse
+
+    }
 }
+
