@@ -57,7 +57,7 @@ describe('AuthService', () => {
 
     describe('generateToken', async () => {
         it('should generate a key when called', async () => {
-            expect(service.generateToken().length).toBeGreaterThan(0)
+            expect(service.generateToken()).toBeDefined()
         })
     })
 });

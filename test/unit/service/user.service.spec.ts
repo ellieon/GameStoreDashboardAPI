@@ -6,6 +6,7 @@ import { StoreProductLine, StoreStore } from '../../../src/model/store.js';
 import { BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { User } from '../../../src/model/user.js';
 import { UserService } from '../../../src/service/user.service.js';
+import { AuthService } from '../../../src/service/auth.service.js';
 
 vi.mock('axios');
 
@@ -53,6 +54,10 @@ describe('UserService', () => {
         getStores: vi.fn(),
     }
 
+    const mockAuthService = {
+        generateKey: vi.fn()
+    }
+
     beforeEach(async () => {
         vi.clearAllMocks();
 
@@ -63,10 +68,13 @@ describe('UserService', () => {
                     provide: DatabaseService,
                     useValue: mockDatabaseService,
                 },
-                UserService,
                 {
                     provide: StoreApiService,
                     useValue: mockStoreApiService
+                },
+                {
+                    provide: AuthService,
+                    useValue: mockAuthService
                 }
 
             ],

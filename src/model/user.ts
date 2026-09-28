@@ -17,7 +17,6 @@ export type UserPreferences = {
     categories: string[]
 }
 
-
 export class UserPreferencesRequestDTO {
     @IsArray()
     @ArrayNotEmpty()
