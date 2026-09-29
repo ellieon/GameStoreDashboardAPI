@@ -110,8 +110,8 @@ export class DatabaseService implements OnModuleDestroy {
         return res.rows[0].state as GameStoreResponse
     }
     
-    public async getStoreStateLatestForUser(user: User): Promise<GameStoreResponse | undefined> {
-        const query = 'SELECT state FROM user_store_states WHERE user_id = $1 ORDER BY date_taken DESC LIMIT 1'
+    public async getStoreStateFirstYesterdayForUser(user: User): Promise<GameStoreResponse | undefined> {
+        const query = 'SELECT date_taken, state FROM user_store_states WHERE user_id = $1 AND date_taken >= CURRENT_DATE - 1 ORDER BY date_taken ASC LIMIT 1'
         const res = await this.pool.query(query, [user.id])
 
 
@@ -159,7 +159,7 @@ export class DatabaseService implements OnModuleDestroy {
             await client.query('ROLLBACK')
             throw new InternalServerErrorException('Unable to create new user')
         } finally {
-            await client.release()
+           client.release()
         }
 
         return {

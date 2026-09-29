@@ -58,8 +58,8 @@ export class DeltaService {
         return await this.getDeltaFromState(storeState, user)
     }
 
-    public async getStoreDeltaForUserFromLatest(user: User): Promise<StoreDeltaResponse> {
-        const storeState = await this.databaseService.getStoreStateLatestForUser(user)
+    public async getStoreDeltaForUserFromYesterday(user: User): Promise<StoreDeltaResponse> {
+        const storeState = await this.databaseService.getStoreStateFirstYesterdayForUser(user)
         if (!storeState) {
             throw new NotFoundException(`Unable to find state for user`)
         }

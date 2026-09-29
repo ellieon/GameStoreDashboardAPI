@@ -1,4 +1,4 @@
-import { ArrayNotEmpty, IsArray, IsEmail, IsEnum, IsNotEmpty, IsNotEmptyObject, IsString, ValidateNested } from "class-validator"
+import { ArrayNotEmpty, IsArray, IsEmail, IsEnum, IsNotEmpty, IsNotEmptyObject, IsString } from "class-validator"
 
 export class User {
     id: number

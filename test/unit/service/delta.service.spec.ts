@@ -146,7 +146,7 @@ describe('DeltaService', () => {
         storeStoreStateForUser: vi.fn(),
         getStoreStateMetadataForUser: vi.fn(),
         getStoreStateFromId: vi.fn(),
-        getStoreStateLatestForUser: vi.fn(),
+        getStoreStateFirstYesterdayForUser: vi.fn(),
 
     };
 
@@ -258,14 +258,14 @@ describe('DeltaService', () => {
 
     describe('getStoreDeltaForUserFromLatest', async () => {
         it('If a state does not exist for the user, throws a NotFoundException', async () => {
-            mockDatabaseService.getStoreStateLatestForUser.mockResolvedValue(undefined)
-            await expect(service.getStoreDeltaForUserFromLatest(exampleUser)).rejects.toThrow(NotFoundException)
+            mockDatabaseService.getStoreStateFirstYesterdayForUser.mockResolvedValue(undefined)
+            await expect(service.getStoreDeltaForUserFromYesterday(exampleUser)).rejects.toThrow(NotFoundException)
         })
 
         it('If a state exists for the user, returns a delta', async () => {
-            mockDatabaseService.getStoreStateLatestForUser.mockResolvedValue(examplePreviousState)
+            mockDatabaseService.getStoreStateFirstYesterdayForUser.mockResolvedValue(examplePreviousState)
             mockStoreApiService.getListOfGamesForUser.mockResolvedValue(exampleCurrentState)
-            const res = await service.getStoreDeltaForUserFromLatest(exampleUser)
+            const res = await service.getStoreDeltaForUserFromYesterday(exampleUser)
             expect(res.originalStoreState).toEqual(examplePreviousState.stores)
             expect(res.stores).toEqual(expectedDelta)
         })

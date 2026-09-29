@@ -24,7 +24,7 @@ export class DeltaController {
   @Header('Content-Type', 'application/json')
   async getStoreDeltaForCurrentUser(@CurrentUser() user: User, @Query('stateId') stateId?: number){
     if(!stateId)
-        return await this.deltaService.getStoreDeltaForUserFromLatest(user)
+        return await this.deltaService.getStoreDeltaForUserFromYesterday(user)
     else 
         return await this.deltaService.getStoreDeltaForUserFromId(user, stateId)
   }
