@@ -1,4 +1,5 @@
-import { ArrayNotEmpty, IsArray, IsEmail, IsEnum, IsNotEmpty, IsNotEmptyObject, IsString } from "class-validator"
+import { Type } from "class-transformer"
+import { ArrayNotEmpty, IsArray, IsEmail, IsEnum, IsNotEmpty, IsNotEmptyObject, IsString, ValidateNested } from "class-validator"
 
 export class User {
     id: number
@@ -49,6 +50,8 @@ export class CreateUserRequestDTO {
     @IsEmail()
     email: string
 
+    @ValidateNested()
+    @Type(() => UserPreferencesRequestDTO)
     @IsNotEmptyObject()
     preferences: UserPreferencesRequestDTO
 
