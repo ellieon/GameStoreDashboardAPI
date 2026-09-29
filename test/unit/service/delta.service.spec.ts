@@ -18,10 +18,12 @@ describe('DeltaService', () => {
     }
 
     const exampleGameStoreResponse: GameStoreResponse = {
+        dateTaken: new Date(),
         stores: []
     }
 
     const examplePreviousState: GameStoreResponse = {
+            dateTaken: new Date(),
             stores: [{
                 name: 'StoreA',
                 categories: [{
@@ -37,7 +39,6 @@ describe('DeltaService', () => {
                         id: ''
                     }]
                 }],
-                availableBoxIds: []
             }, {
                 name: 'StoreB',
                 categories: [{
@@ -53,10 +54,10 @@ describe('DeltaService', () => {
                         id: ''
                     }]
                 }],
-                availableBoxIds: []
             }],
         }
         const exampleCurrentState: GameStoreResponse = {
+            dateTaken: new Date(),
             stores: [{
                 name: 'StoreA',
                 categories: [{
@@ -72,7 +73,6 @@ describe('DeltaService', () => {
                         id: ''
                     }]
                 }],
-                availableBoxIds: []
             }, {
                 name: 'StoreB',
                 categories: [{
@@ -88,7 +88,6 @@ describe('DeltaService', () => {
                         id: ''
                     }]
                 }],
-                availableBoxIds: []
             }]
         }
 

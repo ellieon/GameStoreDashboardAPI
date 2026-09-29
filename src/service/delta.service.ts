@@ -69,7 +69,7 @@ export class DeltaService {
 
     private async getDeltaFromState(prevState: GameStoreResponse, user: User): Promise<StoreDeltaResponse> {
         const currentGames = await this.storeApiService.getListOfGamesForUser(user)
-        let storeDeltaResponse: StoreDeltaResponse = { stores: [], originalStoreState: prevState.stores }
+        let storeDeltaResponse: StoreDeltaResponse = { comparisonDate: prevState.dateTaken, stores: [], originalStoreState: prevState.stores }
 
         currentGames.stores.forEach(store => {
             const prevStoreState = prevState.stores.find((prevStore) => {

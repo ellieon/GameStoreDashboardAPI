@@ -49,7 +49,10 @@ export class StoreApiService {
         )
       )
 
-      return { stores: storeData }
+      return { 
+        stores: storeData,
+        dateTaken: new Date()
+       }
     } catch {
       throw new ServiceUnavailableException('Unable to connect to store endpoint')
     }
@@ -87,8 +90,6 @@ export class StoreApiService {
   }
 
   private buildStoreObjFromGames(inputData: StoreGameHit[], store: string, categories: string[], productLines: StoreProductLine[]): GameStore {
-    let ids: string[] = []
-
     const storeObj: GameStore = {
       name: store,
       categories: categories.map(category => {
@@ -100,8 +101,7 @@ export class StoreApiService {
           name: productLine?.productLineName,
           games: []
         }
-      }),
-      availableBoxIds: ids
+      })
     }
 
     const sortedData = inputData.sort((a, b) =>
@@ -110,7 +110,6 @@ export class StoreApiService {
 
     sortedData.forEach(game => {
       if (!game.outOfStock.includes(store)) {
-        storeObj.availableBoxIds.push(game.boxId)
         storeObj.categories.forEach((category: {
           games: GameStoreGame[]; id: number;
         }) => {

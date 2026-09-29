@@ -113,7 +113,6 @@ describe('StoreApiService', () => {
                 stores: [
                     {
                         name: 'Acocks Green',
-                        availableBoxIds: ['SGCUGAME002', 'SLEGGCS227C', '045496737313', '045496741075'],
                         categories: [
                             {
                                 id: 59,
@@ -190,7 +189,6 @@ describe('StoreApiService', () => {
                 stores: [
                     {
                         name: 'Aberdeen',
-                        availableBoxIds: ['SLEGGCS194B', '5060004765928'],
                         categories: [
                             {
                                 id: 59,
@@ -218,7 +216,6 @@ describe('StoreApiService', () => {
                     },
                     {
                         name: 'Acocks Green',
-                        availableBoxIds: ['SGCUGAME002', 'SLEGGCS227C', '045496737313', '045496741075'],
                         categories: [
                             {
                                 id: 59,
