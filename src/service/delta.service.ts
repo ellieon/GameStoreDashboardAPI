@@ -69,7 +69,7 @@ export class DeltaService {
 
     private async getDeltaFromState(prevState: GameStoreResponse, user: User): Promise<StoreDeltaResponse> {
         const currentGames = await this.storeApiService.getListOfGamesForUser(user)
-        let storeDeltaResponse: StoreDeltaResponse = { comparisonDate: prevState.dateTaken, stores: [], originalStoreState: prevState.stores }
+        let storeDeltaResponse: StoreDeltaResponse = { comparisonDate: prevState.dateTaken, stores: []}
 
         currentGames.stores.forEach(store => {
             const prevStoreState = prevState.stores.find((prevStore) => {
@@ -120,6 +120,8 @@ export class DeltaService {
     }
 
     private getGameDiffs(a: GameStoreGame[], b: GameStoreGame[]): GameStoreGame[] {
-        return b.filter(x => !a.find(e => e.boxName == x.boxName))
+        const names = new Set(a.map(x => x.boxName))
+ 
+        return b.filter(x => !names.has(x.boxName));
     }
 }
