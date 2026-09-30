@@ -11,8 +11,8 @@ export type StateMetadata = {
 }
 
 export type StoreDeltaResponse = {
-    stores: StoreDelta[],
-    originalStoreState: GameStore[]
+    comparisonDate: Date,
+    stores: StoreDelta[]
 }
 
 export type StoreDelta = {

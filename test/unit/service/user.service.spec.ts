@@ -3,9 +3,10 @@ import { describe, it, beforeEach, expect, vi } from 'vitest';
 import { StoreApiService } from '../../../src/service/storeApi.service.js';
 import { DatabaseService } from '../../../src/service/database.service.js';
 import { StoreProductLine, StoreStore } from '../../../src/model/store.js';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { User } from '../../../src/model/user.js';
 import { UserService } from '../../../src/service/user.service.js';
+import { AuthService } from '../../../src/service/auth.service.js';
 
 vi.mock('axios');
 
@@ -53,6 +54,10 @@ describe('UserService', () => {
         getStores: vi.fn(),
     }
 
+    const mockAuthService = {
+        generateKey: vi.fn()
+    }
+
     beforeEach(async () => {
         vi.clearAllMocks();
 
@@ -63,10 +68,13 @@ describe('UserService', () => {
                     provide: DatabaseService,
                     useValue: mockDatabaseService,
                 },
-                UserService,
                 {
                     provide: StoreApiService,
                     useValue: mockStoreApiService
+                },
+                {
+                    provide: AuthService,
+                    useValue: mockAuthService
                 }
 
             ],
@@ -94,9 +102,9 @@ describe('UserService', () => {
 
             })
 
-            it('Should raise a NotFoundException if the given user is not found in the database', async () => {
+            it('Should raise a InternalServerError if unable to update the database', async () => {
                 mockDatabaseService.updatePreferencesForUser.mockResolvedValue(undefined)
-                await expect(service.updatePreferencesForUser(exampleUser, exampleStores, exampleCats)).rejects.toThrow(NotFoundException)
+                await expect(service.updatePreferencesForUser(exampleUser, exampleStores, exampleCats)).rejects.toThrow(InternalServerErrorException)
                 expect(mockDatabaseService.updatePreferencesForUser).toHaveBeenCalledWith(exampleUser, exampleStores, exampleCats)
             })
         })

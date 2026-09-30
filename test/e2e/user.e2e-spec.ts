@@ -22,6 +22,12 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+    
+    dotenv.config({
+        path: '.env.e2e',
+        override: true,
+    });
+    
     vi.clearAllMocks();
     mockDatabaseService = {
         getUserWithApiKey: vi.fn(),
@@ -86,7 +92,7 @@ describe('UserController', async () => {
 
             })
 
-            it('Should return a 404 not found when the given api key does not match a known user', async () => {
+            it('Should return a 500 when unable to update the preferences', async () => {
                 mockDatabaseService.updatePreferencesForUser = vi.fn().mockResolvedValue(
                     undefined
                 )
@@ -96,7 +102,7 @@ describe('UserController', async () => {
                     .send({ categories: ['67'], stores: ['Aberdeen'] })
                     .set('Content-Type', 'application/json')
                     .set('Accept', 'application/json')
-                expect(response.statusCode).toBe(404)
+                expect(response.statusCode).toBe(500)
 
             }) 
 

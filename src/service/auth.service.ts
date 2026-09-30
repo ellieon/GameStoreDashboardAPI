@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { User } from "../model/user.js";
+import { GeneratedAPIKey, User } from "../model/user.js";
 import { randomBytes } from 'crypto';
 import jsSHA from 'jssha';
 import { DatabaseService } from "./database.service.js";
@@ -12,8 +12,13 @@ export class AuthService {
     constructor(private readonly databaseService: DatabaseService){
         this.apiSecret = getRequiredEnvVar('API_SECRET')
     }
-    public generateToken(): string {
-        return this.generateApiKey()
+    public generateToken(): GeneratedAPIKey {
+        const key = this.generateApiKey()
+        const hash = this.hashKeyWithSalt(key, this.apiSecret);
+        return {
+            key: key,
+            hashedKey: hash
+        }
     }
 
     public async verifyToken(token: string): Promise<User> {

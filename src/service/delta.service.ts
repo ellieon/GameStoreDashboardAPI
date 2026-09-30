@@ -58,8 +58,8 @@ export class DeltaService {
         return await this.getDeltaFromState(storeState, user)
     }
 
-    public async getStoreDeltaForUserFromLatest(user: User): Promise<StoreDeltaResponse> {
-        const storeState = await this.databaseService.getStoreStateLatestForUser(user)
+    public async getStoreDeltaForUserFromYesterday(user: User): Promise<StoreDeltaResponse> {
+        const storeState = await this.databaseService.getStoreStateFirstYesterdayForUser(user)
         if (!storeState) {
             throw new NotFoundException(`Unable to find state for user`)
         }
@@ -69,7 +69,7 @@ export class DeltaService {
 
     private async getDeltaFromState(prevState: GameStoreResponse, user: User): Promise<StoreDeltaResponse> {
         const currentGames = await this.storeApiService.getListOfGamesForUser(user)
-        let storeDeltaResponse: StoreDeltaResponse = { stores: [], originalStoreState: prevState.stores }
+        let storeDeltaResponse: StoreDeltaResponse = { comparisonDate: prevState.dateTaken, stores: []}
 
         currentGames.stores.forEach(store => {
             const prevStoreState = prevState.stores.find((prevStore) => {
@@ -103,9 +103,10 @@ export class DeltaService {
     private getCategoryDelta(prevState: GameStoreCategory | undefined, currentState: GameStoreCategory): CategoryDelta {
         const categoryDelta: CategoryDelta = {
             id: currentState.id,
-            removedGames: [],
+            name: currentState.name ? currentState.name : "",
             newGames: [],
-            name: currentState.name ? currentState.name : ""
+            removedGames: []
+            
         }
 
         if (prevState) {
@@ -119,6 +120,8 @@ export class DeltaService {
     }
 
     private getGameDiffs(a: GameStoreGame[], b: GameStoreGame[]): GameStoreGame[] {
-        return b.filter(x => !a.find(e => e.boxName == x.boxName))
+        const names = new Set(a.map(x => x.boxName))
+ 
+        return b.filter(x => !names.has(x.boxName));
     }
 }
