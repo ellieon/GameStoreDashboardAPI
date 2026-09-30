@@ -13,6 +13,14 @@ let moduleFixture: TestingModule
 let mockApi: MockStoreServer
 
 beforeEach(async () => {
+
+
+    dotenv.config({
+        path: '.env.e2e',
+        override: true,
+    });
+
+    
     vi.clearAllMocks();
     mockDatabaseService = {
         getUserWithApiKey: vi.fn(),
@@ -33,10 +41,6 @@ beforeEach(async () => {
     app = moduleFixture.createNestApplication();
     await app.init();
 
-    dotenv.config({
-        path: '.env.e2e',
-        override: true,
-    });
 });
 
 describe('StoreController', async () => {

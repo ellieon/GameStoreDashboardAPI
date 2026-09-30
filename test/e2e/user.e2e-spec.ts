@@ -22,6 +22,12 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+    
+    dotenv.config({
+        path: '.env.e2e',
+        override: true,
+    });
+    
     vi.clearAllMocks();
     mockDatabaseService = {
         getUserWithApiKey: vi.fn(),

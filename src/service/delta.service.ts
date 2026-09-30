@@ -103,9 +103,9 @@ export class DeltaService {
     private getCategoryDelta(prevState: GameStoreCategory | undefined, currentState: GameStoreCategory): CategoryDelta {
         const categoryDelta: CategoryDelta = {
             id: currentState.id,
+            name: currentState.name ? currentState.name : "",
             removedGames: [],
-            newGames: [],
-            name: currentState.name ? currentState.name : ""
+            newGames: []
         }
 
         if (prevState) {
