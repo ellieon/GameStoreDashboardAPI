@@ -104,8 +104,9 @@ export class DeltaService {
         const categoryDelta: CategoryDelta = {
             id: currentState.id,
             name: currentState.name ? currentState.name : "",
-            removedGames: [],
-            newGames: []
+            newGames: [],
+            removedGames: []
+            
         }
 
         if (prevState) {
